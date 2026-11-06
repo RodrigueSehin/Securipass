@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* Design system SECURIPASS — palette du prompt maître.
+   --color-cta (orange) est repris des maquettes (boutons d'action principaux). */
+@theme inline {
+  --color-brand: #0639d9;
+  --color-brand-dark: #092a66;
+  --color-brand-soft: #eaf2ff;
+  --color-surface: #f5f8fc;
+  --color-ink: #0b1b3a;
+  --color-muted: #526079;
+  --color-success: #10a875;
+  --color-warning: #f59e0b;
+  --color-danger: #e53935;
+  --color-gold: #d6a43b;
+  --color-cta: #f97316;
+  --color-cta-dark: #ea580c;
+  --color-line: #e3e9f3;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: 0 1px 2px rgb(9 42 102 / 0.05), 0 4px 16px rgb(9 42 102 / 0.06);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0b1b3a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Curseur de prix à deux poignées (catalogue) : les pistes laissent passer les clics, seules les poignées les captent. */
+.dual-range input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  appearance: none;
+}
+.dual-range input[type="range"]::-webkit-slider-thumb {
+  pointer-events: auto;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-cta);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgb(9 42 102 / 0.35);
+  cursor: pointer;
+}
+.dual-range input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-cta);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgb(9 42 102 / 0.35);
+  cursor: pointer;
+}
+.dual-range input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Carrousel de la page d accueil : barre de progression de l indicateur */
+@keyframes hero-progress { from { width: 0; } to { width: 100%; } }
+.hero-progress { animation-name: hero-progress; animation-timing-function: linear; animation-fill-mode: both; }
+
+/* Impression (relevé, facture) : sans menu ni barre du haut */
+@media print {
+  aside, header.sticky { display: none !important; }
+  main { padding: 0 !important; }
+}

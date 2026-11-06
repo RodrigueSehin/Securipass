@@ -1,0 +1,1773 @@
+# PROMPT MAÎTRE — SECURIPASS
+## Conception et développement d’une plateforme complète de formation et de certification professionnelle
+
+### 1. TON RÔLE
+
+Tu es une équipe senior composée d’un architecte logiciel, d’un développeur full-stack, d’un expert UI/UX, d’un spécialiste LMS (Learning Management System), d’un expert en cybersécurité, d’un ingénieur data et d’un consultant en formation professionnelle.
+
+Ta mission est de concevoir et de développer **SECURIPASS**, une plateforme SaaS de formation, d’évaluation et de certification professionnelle dans les domaines suivants :
+
+- Sécurité privée et gardiennage.
+- Secourisme au travail et premiers secours.
+- Sécurité incendie et manipulation des extincteurs.
+- Prévention des risques professionnels.
+- Santé, sécurité au travail (SST).
+- Gestion des risques et des situations d’urgence.
+- Réglementation, conformité et prévention.
+
+La plateforme doit permettre aux particuliers, aux formateurs indépendants, aux organismes de formation et aux entreprises de gérer tout le cycle de formation, depuis la découverte d’une formation jusqu’à l’obtention et à la vérification d’un certificat.
+
+Le produit doit être une véritable application fonctionnelle, et non une simple maquette statique.
+
+**Règle fondamentale :** ne te contente pas de produire des écrans. Développe les fonctionnalités, les règles métier, les interactions, la base de données, les autorisations, les traitements serveur et les parcours utilisateur.
+
+---
+
+# 2. IDENTITÉ DU PRODUIT
+
+**Nom :** SECURIPASS
+
+**Signature :** Former · Certifier · Sécuriser
+
+**Positionnement :** la plateforme numérique de référence pour la formation et la certification en sécurité professionnelle.
+
+**Marché initial :** Côte d’Ivoire, avec une architecture permettant une extension aux autres pays africains et à l’international.
+
+**Langue principale :** français.
+
+**Devise par défaut :** FCFA (XOF).
+
+**Fuseau horaire par défaut :** Africa/Abidjan.
+
+La plateforme doit être compatible avec les usages mobiles, les connexions internet variables et les besoins des entreprises qui inscrivent plusieurs collaborateurs simultanément.
+
+## Identité visuelle
+
+Créer une identité premium, professionnelle, rassurante et institutionnelle.
+
+Palette de couleurs :
+- Bleu principal : #0639D9.
+- Bleu foncé : #092A66.
+- Bleu secondaire : #EAF2FF.
+- Blanc : #FFFFFF.
+- Gris clair : #F5F8FC.
+- Gris de texte : #526079.
+- Vert de validation : #10A875.
+- Orange d’attention : #F59E0B.
+- Rouge d’erreur : #E53935.
+- Or pour les certificats : #D6A43B.
+
+Utiliser une typographie moderne et lisible, par exemple Inter.
+
+Le logo doit associer un symbole de protection (bouclier), un élément de sécurité ou de certification et le nom SECURIPASS.
+
+Principes UI/UX :
+- Interface moderne, sobre et premium.
+- Barre latérale blanche dans les espaces connectés.
+- Navigation active en bleu.
+- Cartes à coins arrondis et ombres discrètes.
+- Icônes homogènes.
+- Tableaux professionnels, filtres, recherche et pagination.
+- Formulaires avec validation et messages explicites.
+- Graphiques et indicateurs lisibles.
+- États de chargement, listes vides, erreurs et confirmations.
+- Design responsive desktop, tablette et mobile.
+- Accessibilité clavier et contrastes adaptés.
+- Pas de surcharge visuelle ni de parcours inutilement complexes.
+
+Respecter une identité graphique cohérente sur toutes les pages.
+
+---
+
+# 3. ARCHITECTURE TECHNIQUE
+
+Si aucun environnement technique n'est imposé, privilégier la stack suivante :
+
+### Frontend
+- Next.js avec TypeScript.
+- React.
+- Tailwind CSS.
+- Bibliothèque de composants accessible, par exemple shadcn/ui.
+- Bibliothèque de graphiques comme Recharts.
+- Formulaires avec React Hook Form et Zod.
+- Gestion des états et des requêtes avec les outils adaptés au projet.
+
+### Backend et données
+- PostgreSQL.
+- Supabase pour la base de données, l’authentification et le stockage, ou une architecture backend équivalente.
+- API sécurisées pour les opérations métier.
+- Contrôle d’accès côté serveur.
+- Tâches asynchrones pour les notifications et la génération de documents si nécessaire.
+
+### Fichiers et documents
+- Stockage privé des justificatifs, supports pédagogiques et documents sensibles.
+- URLs signées à durée limitée pour les fichiers privés.
+- Génération de certificats PDF.
+- Stockage des modèles de certificats et des versions émises.
+
+### Paiements
+Prévoir une couche d’intégration indépendante du prestataire afin de pouvoir utiliser un fournisseur compatible avec la Côte d’Ivoire, notamment pour les moyens de paiement Mobile Money et la carte bancaire selon les services réellement disponibles.
+
+Ne jamais considérer une redirection du navigateur comme une preuve de paiement. La confirmation doit être effectuée côté serveur à partir de notifications authentifiées du prestataire ou d’une vérification serveur fiable.
+
+### Déploiement
+Préparer l’application pour un déploiement cloud, avec environnements de développement, de test et de production, variables d’environnement, migrations, journalisation et sauvegardes.
+
+Les choix techniques doivent rester modulaires et documentés.
+
+---
+
+# 4. GESTION DES RÔLES ET DES AUTORISATIONS
+
+Implémenter une gestion stricte des rôles.
+
+## Rôles principaux
+
+1. Visiteur : consulte le site public et le catalogue.
+2. Apprenant : suit des formations, passe des évaluations et consulte ses certificats.
+3. Formateur : crée des formations, organise des sessions et évalue les apprenants.
+4. Entreprise : inscrit ses collaborateurs et suit leurs formations.
+5. Administrateur : pilote l’ensemble de la plateforme.
+6. Responsable pédagogique : contrôle les contenus, les évaluations et les parcours.
+7. Responsable certification : supervise l’émission, la révocation et la vérification des certificats.
+8. Support : traite les demandes d’assistance selon des autorisations limitées.
+
+Un utilisateur peut posséder plusieurs rôles si cela est autorisé.
+
+Les autorisations doivent être contrôlées sur chaque opération côté serveur et, lorsque cela est pertinent, au niveau de chaque enregistrement. Un simple masquage de bouton dans l’interface ne constitue pas une protection.
+
+---
+
+# 5. SITE PUBLIC
+
+Créer un site vitrine complet, accessible sans connexion.
+
+## 5.1 Page d’accueil
+
+Contenu :
+- Header avec logo SECURIPASS.
+- Navigation : Accueil, Formations, Certification, Entreprises, Formateurs, À propos, Blog, Contact.
+- Boutons « Se connecter » et « S’inscrire ».
+- Hero section avec un titre fort : « Formez-vous aujourd’hui. Sécurisez demain. »
+- Texte de présentation.
+- Boutons « Découvrir les formations » et « Vérifier un certificat ».
+- Indicateurs clés de la plateforme, sans inventer de chiffres présentés comme réels.
+- Catégories de formation.
+- Formations populaires.
+- Fonctionnement en trois étapes.
+- Avantages pour les apprenants.
+- Solutions pour les entreprises.
+- Présentation des formateurs.
+- Témoignages uniquement s’ils sont authentiques ou clairement identifiés comme exemples.
+- Questions fréquentes.
+- Appel à l’action final.
+- Footer complet.
+
+## 5.2 Catalogue des formations
+
+Fonctionnalités :
+- Recherche par nom ou mot-clé.
+- Filtres par catégorie, niveau, durée, prix, format et disponibilité.
+- Tri par pertinence, prix, popularité et date.
+- Affichage en cartes et, si utile, en liste.
+- Pagination ou chargement progressif.
+- États de chargement et absence de résultats.
+
+Chaque carte affiche :
+- Image.
+- Intitulé.
+- Catégorie.
+- Formateur ou organisme.
+- Durée.
+- Format.
+- Prix.
+- Note si des évaluations réelles existent.
+- Niveau.
+- Bouton « Voir la formation ».
+
+## 5.3 Détails d’une formation
+
+Afficher :
+- Titre et description.
+- Objectifs pédagogiques.
+- Public cible.
+- Prérequis.
+- Compétences visées.
+- Programme détaillé.
+- Durée et modalités.
+- Sessions disponibles.
+- Informations sur le formateur.
+- Modalités d’évaluation.
+- Conditions d’obtention du certificat.
+- Prix et conditions commerciales.
+- FAQ.
+- Bouton d’inscription.
+
+Les contenus liés à la sécurité doivent être validés par des responsables pédagogiques compétents.
+
+## 5.4 Inscription
+
+Créer un parcours simple :
+1. Informations personnelles.
+2. Création du compte.
+3. Choix de la formation et, si applicable, de la session.
+4. Acceptation des conditions nécessaires.
+5. Récapitulatif.
+6. Paiement lorsque la formation est payante.
+7. Confirmation et accès à l’espace apprenant.
+
+Éviter de demander plusieurs fois les mêmes informations.
+
+## 5.5 Paiement
+
+Afficher :
+- Formation concernée.
+- Session.
+- Prix.
+- Réductions autorisées.
+- Taxes applicables si nécessaire.
+- Total à payer.
+- Moyens de paiement disponibles.
+- État de la transaction.
+
+États possibles :
+- En attente.
+- En cours de traitement.
+- Payé.
+- Échoué.
+- Expiré.
+- Remboursé.
+- Partiellement remboursé.
+
+Gérer les webhooks, les doublons, les tentatives répétées, les annulations et la réconciliation des transactions.
+
+Ne jamais stocker directement les numéros complets de carte bancaire ni les secrets du prestataire dans le navigateur.
+
+## 5.6 Vérification des certificats
+
+Créer une page publique de vérification à partir d’un numéro de certificat ou d’un QR code.
+
+Afficher uniquement les informations autorisées :
+- Numéro du certificat.
+- Nom du titulaire, selon la politique de confidentialité.
+- Formation obtenue.
+- Date d’émission.
+- Date d’expiration, si applicable.
+- Organisme émetteur.
+- Statut : valide, expiré, révoqué ou suspendu.
+
+Ne jamais présenter comme officiel un certificat qui n’a pas été réellement émis et validé par la plateforme ou l’autorité compétente.
+
+## 5.7 Entreprises
+
+Créer une page dédiée aux entreprises :
+- Présentation des solutions B2B.
+- Formations pour collaborateurs.
+- Formations sur mesure.
+- Gestion des sessions de groupe.
+- Suivi des compétences et certifications.
+- Demande de devis.
+- Formulaire de contact commercial.
+
+## 5.8 Formateurs
+
+Présenter :
+- Avantages de devenir formateur.
+- Critères d’admission.
+- Fonctionnement de l’espace formateur.
+- Processus de candidature.
+- Formulaire de demande de partenariat.
+- Documents et justificatifs demandés selon les exigences applicables.
+
+## 5.9 À propos, Blog et Contact
+
+Créer les pages :
+- À propos.
+- Mission et vision.
+- Valeurs.
+- Équipe.
+- Blog avec catégories, recherche, pagination et articles.
+- Contact avec formulaire, coordonnées et gestion des demandes.
+
+Protéger les formulaires publics contre le spam et les soumissions abusives.
+
+---
+
+# 6. ESPACE APPRENANT
+
+Créer une application connectée avec une barre latérale blanche et une navigation adaptée au mobile.
+
+Menu principal :
+1. Tableau de bord.
+2. Mes formations.
+3. Catalogue.
+4. Mes inscriptions.
+5. Mes certificats.
+6. Mes évaluations.
+7. Mon Security Pass.
+8. Mes paiements.
+9. Notifications.
+10. Messages.
+11. Supports.
+12. Mon profil.
+
+## 6.1 Tableau de bord
+
+Afficher :
+- Message de bienvenue.
+- Formations en cours.
+- Formations terminées.
+- Progression globale.
+- Prochaines sessions.
+- Évaluations à réaliser.
+- Derniers certificats.
+- Paiements récents.
+- Notifications importantes.
+- Bouton pour reprendre une formation.
+
+## 6.2 Mes formations
+
+Fonctionnalités :
+- Liste des formations inscrites.
+- Filtres par statut.
+- Progression.
+- Temps ou durée restante, si disponible.
+- Prochaine échéance.
+- Accès au contenu.
+- Reprise à la dernière activité.
+- Historique des formations terminées.
+
+Statuts : non commencée, en cours, terminée, suspendue ou expirée selon les règles métier.
+
+## 6.3 Catalogue
+
+Réutiliser le catalogue public en tenant compte du contexte de connexion, des prérequis, des sessions disponibles et des formations déjà suivies.
+
+## 6.4 Mes inscriptions
+
+Afficher :
+- Formation.
+- Session.
+- Date d’inscription.
+- Montant.
+- État du paiement.
+- Statut d’inscription.
+- Documents requis.
+- Actions disponibles.
+
+## 6.5 Mes certificats
+
+Afficher :
+- Liste des certificats.
+- Numéro unique.
+- Formation.
+- Date d’émission.
+- Validité.
+- Statut.
+- Bouton de téléchargement PDF.
+- QR code de vérification.
+- Historique des certifications.
+
+Un certificat ne doit être délivré que lorsque les conditions de formation, de présence et d’évaluation configurées sont remplies.
+
+## 6.6 Mes évaluations
+
+Afficher :
+- Évaluations disponibles.
+- Dates limites.
+- Durée.
+- Nombre de tentatives autorisées.
+- Statut.
+- Résultats publiés.
+- Corrections et feedback autorisés.
+
+## 6.7 Mon Security Pass
+
+Créer un passeport numérique de compétences.
+
+Il présente :
+- Identité du titulaire.
+- Photo si fournie.
+- Compétences validées.
+- Formations suivies.
+- Certifications obtenues.
+- Dates de validité.
+- Références vérifiables.
+- QR code de consultation.
+- Export PDF.
+
+Le passeport doit être une synthèse des données réelles, et non une certification supplémentaire automatiquement accordée.
+
+## 6.8 Mes paiements
+
+Afficher :
+- Historique des paiements.
+- Montants.
+- Moyens de paiement.
+- Références de transaction.
+- Statuts.
+- Reçus téléchargeables.
+- Demandes de remboursement si autorisées.
+
+## 6.9 Notifications, Messages et Supports
+
+Notifications :
+- Inscription confirmée.
+- Session modifiée.
+- Formation disponible.
+- Évaluation à passer.
+- Résultat publié.
+- Certificat émis.
+- Paiement confirmé.
+
+Messages :
+- Conversations avec les formateurs et le support.
+- Fichiers joints sécurisés.
+- Statuts lu/non lu.
+- Historique des échanges.
+
+Supports :
+- Documents téléchargeables.
+- Guides.
+- Ressources pédagogiques.
+- Conditions d’accès selon les inscriptions.
+
+## 6.10 Mon profil
+
+Onglets :
+- Informations personnelles.
+- Photo.
+- Coordonnées.
+- Informations professionnelles.
+- Préférences.
+- Notifications.
+- Sécurité.
+- Changement de mot de passe.
+- Sessions actives et déconnexion.
+
+Permettre à l’utilisateur de consulter et corriger ses informations selon les règles de validation.
+
+---
+
+# 7. ESPACE FORMATEUR
+
+Créer un espace de travail professionnel avec navigation latérale blanche, fond clair, bleu principal et cartes d’indicateurs.
+
+Menu :
+1. Tableau de bord.
+2. Mes formations.
+3. Contenus pédagogiques.
+4. Mes sessions.
+5. Mes apprenants.
+6. Évaluations.
+7. Présences.
+8. Certifications.
+9. Rapports.
+10. Revenus.
+11. Messages.
+12. Notifications.
+13. Mon profil.
+
+## 7.1 Tableau de bord
+
+Afficher :
+- Nombre de formations.
+- Sessions à venir.
+- Apprenants actifs.
+- Taux de réussite.
+- Notes moyennes.
+- Certificats émis.
+- Revenus.
+- Prochaines sessions.
+- Évaluations à corriger.
+- Activité récente.
+
+Les indicateurs doivent être calculés à partir des données réelles du formateur connecté.
+
+## 7.2 Mes formations
+
+Fonctionnalités :
+- Liste des formations.
+- Recherche et filtres.
+- Statut : brouillon, en révision, publiée, rejetée, archivée.
+- Modification.
+- Duplication.
+- Archivage.
+- Consultation des statistiques.
+- Création d’une formation.
+
+### Création d’une formation
+
+Organiser le formulaire en sections fonctionnelles sur une seule page ou dans un parcours compact, sans imposer des étapes artificielles lorsque les informations sont déjà visibles.
+
+#### Informations générales
+- Titre.
+- Catégorie.
+- Description.
+- Objectifs.
+- Public cible.
+- Niveau.
+- Prérequis.
+- Durée.
+- Format : présentiel, distanciel ou hybride.
+- Langue.
+- Image de couverture.
+
+#### Contenu et programme
+- Modules.
+- Chapitres.
+- Leçons.
+- Vidéos.
+- Documents PDF.
+- Présentations.
+- Liens autorisés.
+- Activités pratiques.
+- Ordre des contenus.
+- Durée estimée.
+- Ressources téléchargeables.
+
+#### Évaluation et certification
+- Type d’évaluation.
+- Questions.
+- Barème.
+- Note minimale.
+- Nombre de tentatives.
+- Durée de l’épreuve.
+- Conditions de réussite.
+- Conditions d’assiduité.
+- Certification éventuelle.
+- Durée de validité du certificat.
+
+#### Paramètres
+- Visibilité.
+- Prérequis d’accès.
+- Prix.
+- Conditions d’inscription.
+- Capacité maximale.
+- Conditions d’annulation.
+- Accessibilité.
+- Règles de progression.
+
+#### Aperçu et publication
+- Prévisualisation réelle.
+- Contrôle des champs obligatoires.
+- Vérification des ressources.
+- Soumission pour validation ou publication selon les permissions.
+
+## 7.3 Contenus pédagogiques
+
+Fonctionnalités :
+- Bibliothèque de contenus.
+- Recherche et filtres.
+- Création et modification.
+- Organisation par formation et module.
+- Prévisualisation.
+- Gestion des versions.
+- Publication et archivage.
+
+### Ajouter un contenu
+
+Champs :
+- Titre.
+- Type de contenu.
+- Description.
+- Formation associée.
+- Module.
+- Fichier ou URL.
+- Durée.
+- Objectifs pédagogiques.
+- Instructions.
+- Ordre d’affichage.
+- Conditions d’accès.
+- Visibilité.
+
+Prévoir les formats de fichiers réellement pris en charge et vérifier les fichiers côté serveur.
+
+## 7.4 Mes sessions
+
+Afficher :
+- Calendrier.
+- Sessions à venir.
+- Sessions en cours.
+- Sessions terminées.
+- Nombre d’inscrits.
+- Capacité.
+- Lieu ou lien de visioconférence.
+- Formateur responsable.
+- Statut.
+
+### Créer une session
+
+#### Planification
+- Formation.
+- Nom de session.
+- Date et heure de début.
+- Date et heure de fin.
+- Fuseau horaire.
+- Modalité.
+- Lieu ou lien de connexion.
+- Capacité.
+- Période d’inscription.
+
+#### Participants et options
+- Nombre maximal de participants.
+- Liste des inscrits.
+- Ajout manuel autorisé.
+- Liste d’attente.
+- Conditions d’inscription.
+- Tarif éventuel.
+- Notifications de convocation.
+
+#### Confirmation
+- Récapitulatif.
+- Contrôle des conflits de calendrier.
+- Validation.
+- Création effective de la session.
+- Envoi des notifications appropriées.
+
+## 7.5 Mes apprenants
+
+Fonctionnalités :
+- Liste des apprenants.
+- Recherche.
+- Filtres par formation et session.
+- Fiche individuelle.
+- Progression.
+- Résultats.
+- Présences.
+- Certificats.
+- Historique.
+
+### Ajouter un apprenant
+
+Sections :
+- Informations de l’apprenant.
+- Choix de la formation.
+- Choix de la session.
+- Options d’inscription.
+- Prérequis et documents.
+- Confirmation.
+
+Prévoir une invitation sécurisée si l’apprenant ne possède pas encore de compte. Éviter la création de comptes en double.
+
+## 7.6 Évaluations
+
+Fonctionnalités :
+- Liste des évaluations.
+- Création.
+- Modification.
+- Duplication.
+- Publication.
+- Correction.
+- Résultats.
+- Statistiques.
+- Gestion des tentatives.
+
+### Créer une évaluation
+
+#### Informations générales
+- Titre.
+- Description.
+- Formation.
+- Module.
+- Session.
+- Type.
+- Durée.
+- Note minimale.
+- Date d’ouverture et de fermeture.
+
+#### Questions
+Prendre en charge :
+- Choix unique.
+- Choix multiple.
+- Vrai/Faux.
+- Réponse courte.
+- Question rédactionnelle.
+- Cas pratique avec correction adaptée.
+
+Chaque question comporte :
+- Énoncé.
+- Options éventuelles.
+- Bonne réponse ou barème.
+- Points.
+- Explication.
+- Ordre.
+- Médias si nécessaire.
+
+Pour les choix multiples, définir précisément le barème et la gestion des réponses partiellement correctes.
+
+#### Options et paramètres
+- Ordre des questions.
+- Mélange aléatoire lorsque pertinent.
+- Nombre de tentatives.
+- Temps limite.
+- Affichage des corrections.
+- Publication des résultats.
+- Prévention des soumissions multiples.
+- Règles de reprise.
+
+#### Aperçu et publication
+- Prévisualisation.
+- Validation du barème.
+- Contrôle des questions.
+- Publication.
+- Confirmation.
+
+Les réponses correctes ne doivent pas être exposées prématurément au navigateur.
+
+## 7.7 Présences
+
+Fonctionnalités :
+- Sessions et listes de participants.
+- Pointage manuel.
+- Feuille de présence.
+- Import éventuel.
+- Justification des absences.
+- Retards.
+- Historique.
+- Export PDF/Excel.
+- Calcul du taux de présence.
+
+Les feuilles de présence doivent conserver la trace de l’auteur et de la date des modifications.
+
+## 7.8 Certifications
+
+Créer une interface permettant de gérer les certificats des apprenants.
+
+### Liste des certifications
+
+Afficher :
+- Apprenant.
+- Formation.
+- Session.
+- Numéro.
+- Date d’émission.
+- Durée de validité.
+- Date d’expiration.
+- Statut.
+- Actions.
+
+Filtres par formation, session, apprenant, date et statut.
+
+### Générer un certificat
+
+Utiliser un écran à deux colonnes :
+
+**Colonne gauche : Informations générales et contenu du certificat.**
+
+Informations générales :
+- Formation.
+- Session.
+- Apprenant.
+- Date d’émission.
+- Numéro unique du certificat.
+- Durée de validité éventuelle.
+
+Contenu du certificat :
+- Titre.
+- Texte personnalisable avec variables autorisées.
+- Nom du formateur signataire.
+- Fonction.
+- Nom du responsable habilité.
+- Fonction.
+- Paramètres complémentaires nécessaires.
+
+**Colonne droite : Aperçu du certificat.**
+
+Afficher un aperçu actualisé selon les champs et le modèle sélectionné.
+
+Fonctionnalités :
+- Modèle classique.
+- Modèle moderne.
+- Modèle minimaliste.
+- Modèle professionnel.
+- Aperçu PDF.
+- Téléchargement du PDF.
+- Génération du certificat.
+- Contrôle de l’éligibilité avant émission.
+
+Ne pas ajouter des étapes séparées de design, de personnalisation ou d’aperçu si ces fonctionnalités sont déjà présentes sur l’écran. L’expérience doit rester compacte.
+
+Le système doit :
+- Générer un numéro unique.
+- Créer un QR code de vérification.
+- Conserver une copie du document émis.
+- Enregistrer l’émetteur et la date.
+- Prévenir les doublons.
+- Gérer les révocations et les réémissions.
+- Maintenir l’historique des changements.
+
+La génération manuelle doit respecter les règles d’autorisation et ne jamais contourner les conditions de certification.
+
+## 7.9 Rapports
+
+Créer un tableau de bord analytique avec :
+- Filtres de période.
+- Formation.
+- Session.
+- Type de rapport.
+- Évolution des inscriptions.
+- Taux de réussite.
+- Notes moyennes.
+- Statut des présences.
+- Performance par formation.
+- Détails des évaluations.
+- Top des apprenants selon des critères transparents.
+- Activité récente.
+- Export PDF et Excel.
+
+Tous les graphiques et tableaux doivent utiliser les données réelles et respecter les droits d’accès.
+
+## 7.10 Revenus
+
+Afficher :
+- Revenus totaux.
+- Ventes de formations.
+- Ventes de certifications si applicables.
+- Montants en attente.
+- Évolution des revenus.
+- Répartition des revenus.
+- Statuts des paiements.
+- Transactions.
+- Références.
+- Commissions.
+- Remboursements.
+- Historique des versements.
+
+Ne pas considérer un paiement en attente comme un revenu définitivement encaissé. Distinguer chiffre d’affaires, montants encaissés, commissions, remboursements et sommes dues au formateur.
+
+## 7.11 Mon profil formateur
+
+Onglets :
+- Informations personnelles.
+- Informations professionnelles.
+- Compétences.
+- Disponibilités.
+- Préférences.
+- Sécurité.
+
+Informations professionnelles :
+- Nom affiché.
+- Biographie.
+- Spécialités.
+- Expérience.
+- Certifications et qualifications déclarées.
+- Documents justificatifs.
+- Coordonnées.
+- Localisation.
+- Réseaux professionnels.
+
+Ne pas présenter des qualifications non vérifiées comme des qualifications certifiées par SECURIPASS.
+
+---
+
+# 8. ESPACE ENTREPRISE
+
+Créer un espace dédié aux organisations clientes.
+
+Menu :
+1. Tableau de bord.
+2. Collaborateurs.
+3. Catalogue.
+4. Inscriptions.
+5. Sessions.
+6. Certifications.
+7. Rapports.
+8. Demandes de devis.
+9. Factures et paiements.
+10. Notifications.
+11. Paramètres de l’organisation.
+
+## Tableau de bord entreprise
+
+Afficher :
+- Nombre de collaborateurs.
+- Collaborateurs formés.
+- Formations en cours.
+- Sessions à venir.
+- Certifications valides.
+- Certifications arrivant à expiration.
+- Budget consommé.
+- Dépenses par période.
+- Taux de complétion.
+- Alertes importantes.
+
+## Collaborateurs
+
+Fonctionnalités :
+- Ajouter un collaborateur.
+- Invitation par e-mail.
+- Import CSV contrôlé.
+- Affectation à un service.
+- Affectation à une formation.
+- Suivi des résultats.
+- Gestion des accès.
+- Historique.
+
+## Inscriptions collectives
+
+Permettre :
+- Sélection d’une formation.
+- Sélection d’une session.
+- Sélection de collaborateurs.
+- Gestion des quotas.
+- Application des tarifs négociés autorisés.
+- Validation du panier.
+- Paiement ou facturation selon le contrat.
+- Suivi des inscriptions.
+
+## Certifications
+
+Afficher les certificats des collaborateurs auxquels l’entreprise est autorisée à accéder, avec leurs statuts et échéances.
+
+## Rapports
+
+Créer des rapports par :
+- Collaborateur.
+- Service.
+- Formation.
+- Session.
+- Période.
+- Résultats.
+- Présences.
+- Validité des certificats.
+- Budget.
+
+Appliquer une séparation stricte des données entre entreprises.
+
+---
+
+# 9. ESPACE ADMINISTRATEUR
+
+Créer un back-office complet avec permissions granulaires.
+
+Menu :
+1. Tableau de bord.
+2. Utilisateurs.
+3. Apprenants.
+4. Formateurs.
+5. Entreprises.
+6. Formations.
+7. Catégories.
+8. Sessions.
+9. Inscriptions.
+10. Évaluations.
+11. Présences.
+12. Certifications.
+13. Paiements.
+14. Factures et remboursements.
+15. Commissions et versements.
+16. Rapports.
+17. Blog et contenus publics.
+18. Notifications.
+19. Support.
+20. Paramètres.
+21. Journal d’audit.
+
+## Tableau de bord administrateur
+
+Indicateurs :
+- Utilisateurs actifs.
+- Inscriptions.
+- Formations publiées.
+- Sessions à venir.
+- Taux de complétion.
+- Certificats émis.
+- Paiements encaissés.
+- Transactions en attente.
+- Demandes de support.
+- Activité récente.
+
+## Gestion des utilisateurs
+
+Fonctionnalités :
+- Recherche.
+- Filtres.
+- Création et modification.
+- Activation et désactivation.
+- Gestion des rôles.
+- Invitations.
+- Réinitialisation sécurisée.
+- Historique des actions.
+- Gestion des demandes de suppression.
+
+## Gestion des formations
+
+Fonctionnalités :
+- Validation pédagogique.
+- Publication.
+- Refus motivé.
+- Archivage.
+- Gestion des catégories.
+- Vérification des pièces justificatives.
+- Historique des versions.
+
+## Gestion des certifications
+
+Fonctionnalités :
+- Contrôle des règles d’émission.
+- Historique des certificats.
+- Vérification des numéros.
+- Révocation avec motif.
+- Suspension.
+- Réémission autorisée.
+- Journal d’audit.
+- Gestion des modèles officiels.
+
+## Gestion des paiements
+
+Fonctionnalités :
+- Transactions.
+- Statuts.
+- Webhooks.
+- Rapprochement.
+- Remboursements autorisés.
+- Factures.
+- Commissions.
+- Versements.
+- Export comptable.
+- Détection des anomalies.
+
+## Paramètres
+
+Prévoir :
+- Identité de la plateforme.
+- Paramètres régionaux.
+- Devise.
+- Taxes.
+- Modes de paiement.
+- Modèles de certificats.
+- Modèles d’e-mails.
+- Règles de certification.
+- Politiques de confidentialité.
+- Paramètres de sécurité.
+- Durées de conservation.
+- Journalisation.
+
+---
+
+# 10. MODÈLE DE DONNÉES
+
+Concevoir une base relationnelle normalisée avec clés primaires, clés étrangères, contraintes d’intégrité, index et migrations versionnées.
+
+Prévoir au minimum les entités suivantes.
+
+## Identité et autorisations
+
+### profiles
+- id.
+- full_name.
+- email.
+- phone.
+- avatar_url.
+- locale.
+- timezone.
+- status.
+- created_at.
+- updated_at.
+
+### roles
+- id.
+- code.
+- name.
+- description.
+
+### user_roles
+- user_id.
+- role_id.
+- assigned_at.
+- assigned_by.
+
+### organizations
+- id.
+- name.
+- registration_number, si applicable.
+- industry.
+- address.
+- city.
+- country.
+- billing_email.
+- status.
+
+### organization_members
+- id.
+- organization_id.
+- user_id.
+- role.
+- department.
+- status.
+
+## Formations et contenus
+
+### categories
+- id.
+- name.
+- slug.
+- description.
+- parent_id.
+
+### courses
+- id.
+- instructor_id.
+- category_id.
+- title.
+- slug.
+- description.
+- objectives.
+- prerequisites.
+- target_audience.
+- level.
+- duration_minutes.
+- delivery_mode.
+- price_amount.
+- currency.
+- cover_url.
+- status.
+- published_at.
+- created_at.
+- updated_at.
+
+### course_modules
+- id.
+- course_id.
+- title.
+- description.
+- position.
+
+### learning_contents
+- id.
+- module_id.
+- title.
+- content_type.
+- description.
+- file_path.
+- external_url.
+- duration_minutes.
+- position.
+- status.
+
+### learning_progress
+- id.
+- enrollment_id.
+- learning_content_id.
+- status.
+- progress_percent.
+- started_at.
+- completed_at.
+- updated_at.
+
+## Sessions et inscriptions
+
+### sessions
+- id.
+- course_id.
+- instructor_id.
+- title.
+- start_at.
+- end_at.
+- timezone.
+- location.
+- meeting_url.
+- capacity.
+- registration_deadline.
+- status.
+
+### enrollments
+- id.
+- learner_id.
+- course_id.
+- session_id, nullable selon le format.
+- organization_id, nullable.
+- status.
+- enrolled_at.
+- completed_at.
+
+### attendance_records
+- id.
+- session_id.
+- learner_id.
+- attendance_status.
+- check_in_at.
+- check_out_at.
+- recorded_by.
+- justification.
+- created_at.
+
+## Évaluations
+
+### assessments
+- id.
+- course_id.
+- session_id.
+- title.
+- description.
+- duration_minutes.
+- passing_score.
+- max_attempts.
+- opens_at.
+- closes_at.
+- status.
+
+### assessment_questions
+- id.
+- assessment_id.
+- question_type.
+- statement.
+- points.
+- explanation.
+- position.
+
+### question_options
+- id.
+- question_id.
+- label.
+- position.
+
+Les bonnes réponses doivent être conservées côté serveur ou dans des données non accessibles aux candidats avant autorisation.
+
+### assessment_attempts
+- id.
+- assessment_id.
+- learner_id.
+- attempt_number.
+- started_at.
+- submitted_at.
+- score.
+- status.
+
+### assessment_answers
+- id.
+- attempt_id.
+- question_id.
+- answer_data.
+- awarded_points.
+- feedback.
+
+## Certifications
+
+### certificate_templates
+- id.
+- name.
+- template_data.
+- status.
+- version.
+- created_by.
+- created_at.
+
+### certificates
+- id.
+- certificate_number.
+- learner_id.
+- course_id.
+- session_id.
+- template_id.
+- issued_by.
+- issued_at.
+- valid_until.
+- status.
+- pdf_path.
+- verification_token.
+- revoked_at.
+- revocation_reason.
+- created_at.
+
+Le numéro de certificat et le jeton de vérification doivent être uniques. Le jeton doit être difficile à deviner et ne doit pas exposer de données personnelles.
+
+### certificate_events
+- id.
+- certificate_id.
+- event_type.
+- actor_id.
+- reason.
+- created_at.
+- metadata.
+
+## Paiements et facturation
+
+### orders
+- id.
+- buyer_id.
+- organization_id.
+- currency.
+- subtotal.
+- discount_amount.
+- tax_amount.
+- total_amount.
+- status.
+- created_at.
+
+### order_items
+- id.
+- order_id.
+- course_id.
+- session_id.
+- quantity.
+- unit_price.
+- total_price.
+
+### payments
+- id.
+- order_id.
+- provider.
+- provider_reference.
+- amount.
+- currency.
+- status.
+- paid_at.
+- created_at.
+
+### payment_events
+- id.
+- payment_id.
+- event_id.
+- event_type.
+- payload_reference.
+- received_at.
+- processed_at.
+
+Prévoir une contrainte d’unicité sur les identifiants d’événements du prestataire pour éviter les doubles traitements.
+
+### invoices
+- id.
+- order_id.
+- invoice_number.
+- issued_at.
+- pdf_path.
+- status.
+
+### refunds
+- id.
+- payment_id.
+- amount.
+- reason.
+- status.
+- requested_at.
+- processed_at.
+
+### instructor_payouts
+- id.
+- instructor_id.
+- amount.
+- currency.
+- period_start.
+- period_end.
+- status.
+- paid_at.
+
+## Communication et administration
+
+### notifications
+- id.
+- user_id.
+- type.
+- title.
+- body.
+- read_at.
+- created_at.
+
+### conversations
+- id.
+- created_by.
+- subject.
+- created_at.
+
+### conversation_members
+- conversation_id.
+- user_id.
+
+### messages
+- id.
+- conversation_id.
+- sender_id.
+- body.
+- attachment_path.
+- sent_at.
+- read_at.
+
+### support_tickets
+- id.
+- requester_id.
+- subject.
+- description.
+- priority.
+- status.
+- assigned_to.
+- created_at.
+- updated_at.
+
+### blog_posts
+- id.
+- author_id.
+- title.
+- slug.
+- content.
+- cover_url.
+- status.
+- published_at.
+
+### audit_logs
+- id.
+- actor_id.
+- action.
+- entity_type.
+- entity_id.
+- occurred_at.
+- ip_address, si nécessaire et licite.
+- metadata.
+
+Compléter le modèle par les contraintes, index, politiques de conservation, relations et champs nécessaires aux fonctionnalités.
+
+Les montants financiers doivent utiliser un type numérique exact, jamais un flottant imprécis.
+
+---
+
+# 11. RÈGLES MÉTIER CRITIQUES
+
+## Inscriptions
+- Vérifier les places disponibles.
+- Empêcher les inscriptions incompatibles.
+- Respecter les dates limites.
+- Gérer les listes d’attente.
+- Préserver l’historique des inscriptions.
+
+## Progression
+- Calculer la progression à partir des contenus terminés.
+- Distinguer consultation, achèvement et validation pédagogique.
+- Ne pas marquer automatiquement une formation comme terminée sur la seule base d’un temps passé.
+
+## Évaluations
+- Valider les tentatives côté serveur.
+- Calculer les scores côté serveur.
+- Respecter les règles de correction.
+- Empêcher les doubles soumissions.
+- Conserver les résultats et les corrections autorisées.
+
+## Certifications
+- Définir des conditions explicites d’éligibilité.
+- Contrôler la réussite aux évaluations.
+- Contrôler les présences lorsque requises.
+- Vérifier les validations pédagogiques.
+- Générer un certificat unique et traçable.
+- Gérer les dates d’expiration.
+- Prévoir les procédures de révocation.
+- Permettre la vérification publique du statut.
+
+Ne pas confondre un certificat de suivi de formation, une attestation de présence, un certificat de réussite et une habilitation réglementaire.
+
+Toute mention de reconnaissance officielle doit être fondée sur une autorisation ou une reconnaissance réellement obtenue.
+
+---
+
+# 12. SÉCURITÉ ET CONFORMITÉ
+
+Implémenter :
+- Authentification sécurisée.
+- Réinitialisation de mot de passe.
+- Vérification d’adresse e-mail.
+- Contrôle d’accès par rôle.
+- Isolation des données par utilisateur et organisation.
+- Protection contre les accès non autorisés.
+- Validation serveur de toutes les entrées.
+- Protection contre les injections et les attaques XSS/CSRF selon l’architecture.
+- Limitation de débit sur les routes sensibles.
+- Contrôle des types et tailles de fichiers.
+- Stockage privé des documents.
+- Secrets uniquement côté serveur.
+- Journalisation des opérations sensibles.
+- Sauvegardes et procédure de restauration.
+- Gestion des erreurs sans fuite d’informations sensibles.
+- Consentement et gestion des droits sur les données personnelles.
+- Procédures de suppression et de conservation conformes aux exigences applicables.
+
+Pour Supabase, activer et tester les politiques RLS sur toutes les tables exposées. Les clés privilégiées ne doivent jamais être intégrées au code client.
+
+La conformité aux exigences ivoiriennes de protection des données et aux obligations applicables à la formation professionnelle doit être vérifiée avant la mise en production.
+
+---
+
+# 13. NOTIFICATIONS
+
+Prévoir des notifications :
+- Dans l’application.
+- Par e-mail.
+- Éventuellement par SMS ou WhatsApp via des prestataires autorisés et intégrés.
+
+Événements :
+- Création de compte.
+- Inscription.
+- Confirmation de paiement.
+- Échec de paiement.
+- Convocation à une session.
+- Modification d’une session.
+- Rappel d’évaluation.
+- Publication des résultats.
+- Émission de certificat.
+- Expiration prochaine d’un certificat.
+- Révocation.
+- Réponse du support.
+
+Les notifications doivent être configurables et ne pas être envoyées en double lors de traitements répétés.
+
+---
+
+# 14. BUSINESS MODEL
+
+Construire une plateforme avec plusieurs sources de revenus.
+
+## Revenus B2C
+- Vente de formations.
+- Parcours de formation groupés.
+- Examens ou évaluations lorsque le modèle le justifie.
+- Renouvellement de formations et certifications lorsque cela est applicable.
+
+## Revenus B2B
+- Achat de formations pour collaborateurs.
+- Contrats annuels.
+- Packs de formation.
+- Gestion centralisée des compétences.
+- Rapports et tableaux de bord avancés.
+- Formations sur mesure.
+- Accompagnement des entreprises.
+
+## Revenus formateurs
+- Commission sur les ventes.
+- Abonnement professionnel facultatif.
+- Services complémentaires.
+
+## Modèle économique
+
+Prévoir des paramètres administrables :
+- Prix des formations.
+- Commissions.
+- Frais de transaction.
+- Taxes.
+- Tarifs négociés.
+- Codes promotionnels.
+- Remboursements.
+- Plans d’abonnement.
+- Facturation des entreprises.
+
+Ne pas coder en dur les taux de commission ou les règles de facturation.
+
+Afficher clairement les prix, les conditions et les éventuels frais avant le paiement.
+
+---
+
+# 15. UX ET COMPOSANTS COMMUNS
+
+Créer un système de composants réutilisables :
+
+- Sidebar.
+- Header.
+- Fil d’Ariane.
+- Cartes KPI.
+- Tableaux.
+- Filtres.
+- Recherche.
+- Pagination.
+- Modales.
+- Formulaires.
+- Upload de fichiers.
+- Calendrier.
+- Graphiques.
+- Badges de statut.
+- Notifications toast.
+- Menus contextuels.
+- Confirmation des actions destructives.
+- États de chargement.
+- États vides.
+- Messages d’erreur.
+- Prévisualisation PDF.
+- Composant de QR code.
+
+Chaque composant doit respecter le design system SECURIPASS.
+
+Les interfaces doivent être cohérentes entre les rôles tout en affichant uniquement les fonctions autorisées.
+
+Les menus latéraux doivent rester lisibles et adaptés aux écrans de petite taille.
+
+---
+
+# 16. EXIGENCES DE DÉVELOPPEMENT
+
+Ne développe pas toute l’application dans un seul composant.
+
+Organise le code par domaines métier :
+- Authentification.
+- Utilisateurs.
+- Formations.
+- Contenus.
+- Sessions.
+- Inscriptions.
+- Évaluations.
+- Présences.
+- Certifications.
+- Paiements.
+- Entreprises.
+- Notifications.
+- Rapports.
+- Administration.
+
+Exigences :
+- TypeScript strict.
+- Composants réutilisables.
+- Fonctions métier testables.
+- Validation des données.
+- Gestion centralisée des erreurs.
+- Séparation des responsabilités.
+- Migrations versionnées.
+- Variables d’environnement documentées.
+- Tests unitaires et d’intégration.
+- Tests des permissions.
+- Tests des flux de paiement.
+- Tests des règles de certification.
+- Documentation d’installation et de déploiement.
+
+Ne crée pas de boutons purement décoratifs. Chaque bouton doit effectuer une action réelle, afficher une confirmation ou être explicitement désactivé avec une explication.
+
+Ne simule pas un paiement réussi, un certificat émis ou une notification envoyée dans les parcours de production.
+
+Les données de démonstration doivent être identifiées comme telles.
+
+---
+
+# 17. PLAN DE RÉALISATION
+
+Développer le projet par lots, en conservant une application exécutable à chaque étape.
+
+### Lot 1 — Fondations
+- Structure du projet.
+- Design system.
+- Navigation.
+- Base de données.
+- Authentification.
+- Rôles et permissions.
+- Site public de base.
+
+### Lot 2 — Formations
+- Catalogue.
+- Détails.
+- Création et publication.
+- Contenus pédagogiques.
+- Sessions.
+- Inscriptions.
+
+### Lot 3 — Espace apprenant
+- Tableau de bord.
+- Mes formations.
+- Progression.
+- Évaluations.
+- Présences.
+- Profil.
+
+### Lot 4 — Espace formateur
+- Tableau de bord.
+- Mes formations.
+- Contenus.
+- Sessions.
+- Apprenants.
+- Évaluations.
+- Présences.
+
+### Lot 5 — Certifications
+- Modèles.
+- Génération PDF.
+- Numéros uniques.
+- QR codes.
+- Vérification publique.
+- Expiration et révocation.
+
+### Lot 6 — Paiements
+- Commandes.
+- Intégration du prestataire.
+- Webhooks.
+- Reçus et factures.
+- Remboursements.
+- Commissions et versements.
+
+### Lot 7 — Entreprises
+- Organisations.
+- Collaborateurs.
+- Inscriptions collectives.
+- Suivi des certifications.
+- Rapports.
+
+### Lot 8 — Administration
+- Gestion globale.
+- Validation des formations.
+- Contrôle des certifications.
+- Paiements.
+- Paramètres.
+- Audit.
+
+### Lot 9 — Qualité et production
+- Tests.
+- Sécurité.
+- Accessibilité.
+- Responsive design.
+- Performances.
+- Sauvegardes.
+- Documentation.
+- Déploiement.
+
+---
+
+# 18. CRITÈRES DE VALIDATION
+
+Le projet ne peut être considéré comme terminé que si les scénarios suivants fonctionnent réellement :
+
+1. Un visiteur peut consulter une formation et créer un compte.
+2. Un apprenant peut s’inscrire et effectuer un paiement de test dans un environnement sandbox.
+3. Un paiement confirmé côté serveur met à jour la commande sans doublon.
+4. L’apprenant accède uniquement aux contenus auxquels il a droit.
+5. Un formateur peut créer une formation, ajouter des contenus et planifier une session.
+6. Un formateur peut inscrire un apprenant si son rôle le permet.
+7. Un apprenant peut passer une évaluation et consulter son résultat autorisé.
+8. Les présences peuvent être enregistrées et auditées.
+9. Un certificat ne peut être émis que lorsque les règles d’éligibilité sont satisfaites.
+10. Un certificat généré possède un numéro unique et un QR code fonctionnel.
+11. La page publique de vérification retourne le statut réel du certificat.
+12. Une révocation est reflétée dans la vérification publique.
+13. Une entreprise ne peut consulter que ses propres données et les informations auxquelles elle est autorisée à accéder.
+14. Un administrateur peut gérer les utilisateurs, formations et paramètres selon ses permissions.
+15. Les tableaux de bord utilisent les données réelles.
+16. Les principales opérations sont couvertes par des tests.
+17. L’application fonctionne sur ordinateur, tablette et mobile.
+
+---
+
+# 19. LIVRABLES ATTENDUS
+
+À la fin du développement, fournir :
+
+- Le code source complet.
+- L’architecture du projet.
+- Le modèle de données.
+- Les migrations SQL.
+- Les règles de sécurité et d’accès.
+- Les écrans publics.
+- L’espace apprenant.
+- L’espace formateur.
+- L’espace entreprise.
+- L’espace administrateur.
+- Le système de certification.
+- Le module de paiement.
+- Les tests.
+- Les données de démonstration.
+- Le fichier d’exemple des variables d’environnement, sans secrets.
+- La documentation d’installation.
+- La documentation de déploiement.
+- La liste des intégrations externes nécessaires.
+- Les éléments restant à configurer pour la production.
+
+## Consigne finale à l’agent IA
+
+Commence par analyser le projet existant et les éventuels fichiers fournis. Si un projet existe déjà, conserve les éléments fonctionnels et adapte-les au lieu de tout réécrire inutilement.
+
+Présente brièvement l’architecture retenue, puis implémente les fonctionnalités par lots. Vérifie le fonctionnement de chaque lot avant de poursuivre.
+
+Ne t’arrête pas à une proposition, à une maquette ou à du code fictif. Crée une application réellement exécutable, avec des données persistantes, des règles métier cohérentes et des tests.
+
+Lorsque des informations réglementaires, commerciales ou des intégrations externes ne sont pas encore confirmées, isole-les dans une configuration et signale clairement ce qui doit être validé.
+
+**Objectif final : livrer SECURIPASS, une plateforme SaaS complète, sécurisée, responsive, maintenable et commercialisable, permettant de gérer l’intégralité du parcours de formation et de certification professionnelle.**
