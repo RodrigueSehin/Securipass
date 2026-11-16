@@ -93,7 +93,7 @@ Migration 10 (`20260101000010_certifications.sql`) : appliquée sur le projet Su
 - ⬜ Renouvellement de formation, certifications externes
 
 ## Lot 6 — Paiements
-⛔ Choix du prestataire (compatible Côte d'Ivoire / Mobile Money) · ⬜ Commandes · ⬜ Webhooks · ⬜ Factures · ⬜ Remboursements · ⬜ Commissions et versements
+⛔ Choix du prestataire (compatible Côte d'Ivoire / Mobile Money) · ⬜ Commandes · ⬜ Webhooks · ✅ Factures et remboursements (saisis par l'administration, voir Lot 8) · ✅ Commissions et versements (voir Lot 8)
 - ✅ « Mes paiements » (`/app/paiements`) : page honnête, sans montant ni transaction fictifs (maquette `SECURIPASS Learner - Payment Dashboard.png` non reprise : ses données, ses moyens de paiement et ses factures sont fictifs). Indique qu'aucun paiement n'est enregistré et que les paiements en ligne ne sont pas encore ouverts
 - Décision à prendre : prestataire de paiement (Orange Money, MTN Mobile Money, Wave, carte) et contrat de sandbox ; sans lui, aucun schéma de commandes n'est défini
 
@@ -101,7 +101,30 @@ Migration 10 (`20260101000010_certifications.sql`) : appliquée sur le projet Su
 ⬜ Organisations · ⬜ Collaborateurs (invitation, import CSV) · ⬜ Inscriptions collectives · ⬜ Suivi des certifications · ⬜ Rapports
 
 ## Lot 8 — Administration
-⬜ Gestion globale (utilisateurs, catégories, sessions) · ✅ Validation des formations (faite au Lot 2) · ⬜ Contrôle des certifications · ⬜ Paiements · ⬜ Paramètres · ⬜ Journal d'audit
+✅ Gestion globale · ✅ Validation des formations (Lot 2, aujourd'hui via le filtre Statut de `/admin/formations`) · ✅ Certifications · ✅ Paiements, factures, commissions · ✅ Rapports · ⬜ Support · ⬜ Notifications · ⬜ Paramètres · ⬜ Journal d'audit
+
+Mise à jour du 16 novembre 2026 (génération de rapports ajoutée). Les écrans ci-dessous sont dans `app/src/app/admin/`, chacun avec ses fonctions SQL réservées aux administrateurs (`_admin_only`), son export et ses actions tracées dans le journal d'audit. Tests : **657 (85 fichiers)** dont les règles SQL sur la base PGlite ; typage et lint propres. **Aucun de ces écrans n'a été parcouru dans un navigateur**, et les fichiers PDF et Excel n'ont pas été ouverts dans leur logiciel (leur structure est vérifiée par les tests). Migrations 27 à 53 : leur application sur le projet Supabase en ligne n'a pas été vérifiée dans cette révision. **Migrations 54, 55, 56 et 57 : à appliquer** (dans cet ordre).
+
+Tableaux de bord et créations, selon les maquettes `maquettes/Admin/` :
+- ✅ Tableau de bord, utilisateurs et création d'un compte (migrations 27 à 29, voir plus haut)
+- ✅ Formateurs (`/admin/formateurs`, migrations 30-31) · ✅ Entreprises (`/admin/entreprises`, 32 et 38) · ✅ Catégories (`/admin/categories`, 33-34)
+- ✅ Sessions (`/admin/sessions`, 35-36) · ✅ Inscriptions (`/admin/inscriptions`, 37 et 39) · ✅ Apprenants (`/admin/apprenants`, 40-41)
+- ✅ Évaluations et éditeur de questions (`/admin/evaluations`, 42-43) · ✅ Présences (`/admin/presences`, 44) · ✅ Certifications (`/admin/certifications`, 45-46)
+- ✅ Blog et contenus publics (`/admin/blog`, 47-48 : le site public lit encore le fichier `src/content/blog.ts`, pas cette table)
+- ✅ Paiements (`/admin/paiements`, 49-50) · ✅ Factures, remboursements et avoirs (`/admin/factures`, 51-52). Tout est saisi par l'administration : aucun paiement en ligne (Lot 6 bloqué)
+- ✅ **Formations** (`/admin/formations`, sans migration, maquette `Formations Dashboard.png`) : 5 indicateurs, filtres catégorie / statut / mode, recherche (titre, code, description, formateur principal), tri, pagination, export CSV. Remplace l'ancienne file de validation, qui reste accessible par le filtre « En révision ». Désactivés faute de fonction : « Importer » et « Ajouter une formation » (la maquette `Formation Creation.png` n'a pas de route). Pas de tri par note ni par mode
+- ✅ **Commissions et versements** (`/admin/commissions`, migration 54, maquette `Commission Dashboard.png`) : commission créée automatiquement avec chaque paiement de formation confirmé (taux figé, 15 % par défaut), onglets Commissions / Versements / Paramètres (taux), graphique 6 mois, synthèse du mois, derniers versements, action « Verser » par ligne. Tests SQL : `admin-commissions.test.ts`
+- ✅ **Nouveau versement** (`/admin/commissions/nouveau`, migration 55, maquette `Commission - Nouveau versement.png`) : bénéficiaire, mode (virement, Mobile Money, espèces, chèque), sélection des lignes, frais, coordonnées, motif, justificatif (bucket privé `payout-proofs`, 10 Mo). Les coordonnées bancaires ne sont pas mémorisées sur le profil du formateur ; aucun e-mail ni virement réel
+- ✅ **Rapports** (`/admin/rapports`, migration 56, maquette `Reports Dashboard.png`) : période au mois, 5 indicateurs avec évolution, courbe des inscriptions sur 6 mois, répartition et top 5 des formations, synthèse (complétion, réussite aux évaluations, présence, chiffre d'affaires, commissions), 9 types de rapports (inscriptions, formations, sessions, apprenants, évaluations, certifications, financier, présences, activité ; 5 000 lignes au plus) et historique « Rapports récents » (`report_runs`, régénérable à l'identique). Chaque carte de « Rapports disponibles » ouvre le générateur. Le bouton « Exporter » donne la synthèse du mois en CSV. Pas de planification. Tests : `admin-reports.test.ts` (SQL) et `reports.test.ts`
+- ✅ **Générer un rapport** (`/admin/rapports/generer`, migration 57, maquette `Reports - Generation Dashboard.png`) : formulaire (type, période au mois, formation, session, formateur, statut d'inscription, 9 indicateurs à inclure, format, nom, description) et aperçu côté serveur (synthèse, graphiques, détail par formation avec total ou échantillon de données). « Mettre à jour l'aperçu » recharge la page ; « Télécharger » produit le fichier sans le conserver ; « Générer le rapport » le produit et l'ajoute aux rapports récents (format, description et paramètres conservés). Formats : **PDF** (A4, bandeau, synthèse, graphiques, tables ; 300 lignes de détail au plus), **Excel .xlsx** (feuilles Synthèse et Détail, écrites sans dépendance) et **CSV** (synthèse puis détail). Filtres appliqués dans la base (`_report_enrollments`, `_report_sessions`) ; le statut ne concerne que les rapports d'inscriptions et d'apprenants. Écart avec la maquette : la période est un mois (affiché « 01 oct. 2026 – 31 oct. 2026 »), pas une plage libre. Tests : filtres SQL (`admin-reports.test.ts`), paramètres et indicateurs (`report-generation.test.ts`), fichiers PDF / Excel / CSV (`report-files.test.ts`)
+- Définitions des taux : complétion = inscriptions terminées ÷ (confirmées + terminées) jusqu'à la fin du mois ; réussite = résultats réussis des évaluations dont la fenêtre tombe dans le mois ; présence = présents ou en retard ÷ présences saisies des sessions du mois. Une inscription annulée n'est jamais comptée
+
+Reste à faire (maquettes présentes dans `maquettes/Admin/` pour certaines) :
+- ⬜ **Support** : maquettes `Support Dashboard Overview.png` et trois écrans « Détail d'un ticket » (conversation, historique, pièces jointes) ; aucune table ni page
+- ⬜ Rapports : période libre (plage de dates), planification et envoi par e-mail, rapports de l'espace formateur et entreprise
+- ⬜ **Création d'une formation par l'administration** (`Formations - Formation Creation.png`) · ⬜ importation de formations
+- ⬜ Notifications · ⬜ Paramètres · ⬜ Journal d'audit (la table `audit_logs` est alimentée par toutes les actions d'administration, mais aucun écran ne la lit)
+- ⬜ Recherche globale et choix de langue de l'en-tête · ⬜ messagerie formateur
 
 ## Lot 9 — Qualité et production
 ⬜ Tests (permissions, paiements, certification) · ⬜ Accessibilité · ⬜ Performances · ⬜ Sauvegardes · ⬜ Documentation · ⬜ Déploiement
