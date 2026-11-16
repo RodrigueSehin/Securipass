@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Award, BookOpen, Building2, CalendarCheck, CalendarDays, ClipboardCheck, CreditCard, FileText, FolderOpen, GraduationCap, Home, Newspaper, UserPlus, Users, type LucideIcon } from "lucide-react";
+import { Award, BookOpen, Settings, Building2, CalendarCheck, CalendarDays, ClipboardCheck, CreditCard, FileText, FolderOpen, GraduationCap, Home, Newspaper, UserPlus, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /** Pictogrammes disponibles pour l'en-tête (clé courte → icône). */
 const ICONS: Record<string, LucideIcon> = {
   users: Users, "user-plus": UserPlus, building: Building2, folder: FolderOpen, calendar: CalendarDays, "calendar-check": CalendarCheck, formation: GraduationCap,
-  evaluation: ClipboardCheck, award: Award, blog: Newspaper, document: FileText, book: BookOpen, payment: CreditCard,
+  evaluation: ClipboardCheck, settings: Settings, award: Award, blog: Newspaper, document: FileText, book: BookOpen, payment: CreditCard,
 };
 export type AdminHeaderIcon = keyof typeof ICONS;
 
