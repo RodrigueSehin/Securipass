@@ -87,7 +87,7 @@ export const ADMIN_NAV: AreaNav = {
     { label: "Rapports", href: "/admin/rapports", icon: "chart" },
     { label: "Blog et contenus publics", href: "/admin/blog", icon: "news" },
     soon("Notifications", "/admin/notifications", "bell"),
-    soon("Support", "/admin/support", "support"),
+    { label: "Support", href: "/admin/support", icon: "support" },
     soon("Paramètres", "/admin/parametres", "settings"),
     soon("Journal d'audit", "/admin/audit", "log"),
   ],

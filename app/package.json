@@ -10,7 +10,8 @@
     "test": "vitest run",
     "images": "node scripts/optimize-images.mjs",
     "seed:demo": "node scripts/seed-demo.mjs",
-    "seed:demo:remove": "node scripts/seed-demo.mjs --remove"
+    "seed:demo:remove": "node scripts/seed-demo.mjs --remove",
+    "role": "node scripts/set-role.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",

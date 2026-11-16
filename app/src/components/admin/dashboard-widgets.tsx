@@ -42,7 +42,7 @@ export function StatCard({ icon: Icon, tone, label, value, trend, note, series }
         <div className="flex items-start justify-between gap-2">
           <p className="truncate text-sm font-semibold text-brand-dark">{label}</p>
           {trend && (
-            <span className={cn("inline-flex items-center gap-0.5 text-xs font-bold", trend.up ? "text-success" : "text-danger")}>
+            <span className={cn("inline-flex items-center gap-0.5 text-xs font-bold", (trend.good ?? trend.up) ? "text-success" : "text-danger")}>
               {trend.up ? <ArrowUp className="h-3 w-3" aria-hidden /> : <ArrowDown className="h-3 w-3" aria-hidden />}{trend.text}
             </span>
           )}

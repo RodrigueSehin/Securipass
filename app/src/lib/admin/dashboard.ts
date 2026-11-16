@@ -1,6 +1,6 @@
 /** Calculs purs du tableau de bord d'administration (testés unitairement). */
 
-export type Trend = { text: string; up: boolean };
+export type Trend = { text: string; up: boolean; /** Évolution favorable malgré le sens de la flèche (ex. un délai qui raccourcit). */ good?: boolean };
 
 /** Évolution en pourcentage entre deux mois ; null sans base de comparaison ou sans variation. */
 export function percentChange(current: number, previous: number): Trend | null {
