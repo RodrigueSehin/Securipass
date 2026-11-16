@@ -116,6 +116,29 @@ export async function postSupportMessage(_prev: FormState, formData: FormData): 
   return { message: d.internal ? "Note interne enregistrée." : "Réponse envoyée." };
 }
 
+/** Modifie le texte d'une note interne. */
+export async function editSupportNote(formData: FormData): Promise<void> {
+  const back = backTo(formData);
+  const id = uuid.safeParse(formData.get("messageId"));
+  const body = z.string().trim().min(1).max(5000).safeParse(formData.get("body"));
+  if (!id.success || !body.success) done(back, "erreur", "La note ne peut pas être vide (5 000 caractères maximum).");
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("admin_edit_support_note", { p_message: id.data, p_body: body.data });
+  if (error) done(back, "erreur", error.message.includes("ticket_closed") ? "Ce ticket est archivé : rouvrez-le d’abord." : FAIL);
+  done(back, "resultat", "note-modifiee");
+}
+
+/** Supprime une note interne. */
+export async function deleteSupportNote(formData: FormData): Promise<void> {
+  const back = backTo(formData);
+  const id = uuid.safeParse(formData.get("messageId"));
+  if (!id.success) done(back, "erreur", "Demande invalide.");
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("admin_delete_support_note", { p_message: id.data });
+  if (error) done(back, "erreur", error.message.includes("ticket_closed") ? "Ce ticket est archivé : rouvrez-le d’abord." : FAIL);
+  done(back, "resultat", "note-supprimee");
+}
+
 /** Enregistre une pièce jointe déjà déposée par le navigateur dans le bucket privé (dossier de l'administrateur). */
 export async function addSupportFile(ticketId: string, path: string, name: string, size: number, mime: string): Promise<{ error?: string }> {
   if (!uuid.safeParse(ticketId).success || !isAllowedFile(mime, size)) return { error: "Fichier refusé : PDF, image ou texte de 10 Mo au maximum." };

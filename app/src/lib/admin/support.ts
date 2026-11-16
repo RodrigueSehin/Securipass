@@ -111,7 +111,7 @@ export function formatFileSize(bytes: number): string {
 }
 
 export type SupportMessage = { id: string; author_id: string; author_name: string; author_avatar: string | null; internal: boolean; body: string; created_at: string; is_requester: boolean };
-export type SupportFile = { id: string; name: string; size: number; mime: string | null; created_at: string };
+export type SupportFile = { id: string; name: string; size: number; mime: string | null; created_at: string; uploader_name: string | null; uploader_avatar: string | null; is_requester: boolean | null };
 export type SupportDetail = {
   ticket: {
     id: string; reference: string; subject: string; description: string | null; category: SupportCategory; priority: SupportPriority; status: SupportStatus;
@@ -177,6 +177,8 @@ export function describeEvent(e: HistoryEvent): HistoryEntry {
       : entry("assignation", "user", "brand", "Assignation retirée", e.from_name ? `Le ticket n’est plus assigné à ${e.from_name}.` : "Le ticket n’est plus assigné.");
     case "support.reply": return entry("messages", "chat", "brand", "Réponse envoyée à l’utilisateur", excerptOf(e.excerpt, "Message de réponse ajouté dans la conversation."));
     case "support.note": return entry("messages", "note", "purple", "Note interne ajoutée", excerptOf(e.excerpt, "Note ajoutée à la conversation."));
+    case "support.note.edit": return entry("messages", "note", "purple", "Note interne modifiée", excerptOf(e.excerpt, "Une note interne a été modifiée."));
+    case "support.note.delete": return entry("messages", "note", "muted", "Note interne supprimée", "Une note interne a été supprimée.");
     case "support.file.add": return entry("fichiers", "paperclip", "brand", "Pièce jointe ajoutée", String(m.name ?? "Fichier"));
     case "support.file.remove": return entry("fichiers", "paperclip", "muted", "Pièce jointe retirée", String(m.name ?? "Fichier"));
     default: return entry("statut", "refresh", "muted", e.action.replace(/^support\./, ""), "");

@@ -16,7 +16,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
   const { data: file } = await supabase.from("support_ticket_files").select("path, name").eq("id", id).maybeSingle<{ path: string; name: string }>();
   if (!file) return new NextResponse("Introuvable", { status: 404 });
-  const { data } = await supabase.storage.from("support-files").createSignedUrl(file.path, LINK_TTL_SECONDS, { download: file.name });
+  // ?apercu=1 : affichage en ligne (aperçu dans l'onglet) ; sinon téléchargement
+  const preview = new URL(request.url).searchParams.get("apercu") === "1";
+  const { data } = await supabase.storage.from("support-files").createSignedUrl(file.path, LINK_TTL_SECONDS, preview ? undefined : { download: file.name });
   if (!data?.signedUrl) return new NextResponse("Fichier indisponible", { status: 404 });
   return NextResponse.redirect(data.signedUrl);
 }

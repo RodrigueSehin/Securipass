@@ -6,7 +6,9 @@ import {
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AttachFileButton } from "@/components/admin/support-attachments";
+import { SupportFilesTab } from "@/components/admin/support-files-tab";
 import { SupportHistory } from "@/components/admin/support-history";
+import { SupportNotes } from "@/components/admin/support-notes";
 import { SupportReplyForm } from "@/components/admin/support-reply-form";
 import { TicketFields } from "@/components/admin/support-ticket-fields";
 import { CategoryTag } from "@/components/admin/support-widgets";
@@ -25,18 +27,18 @@ const when = (iso: string) => `${dayFmt.format(new Date(iso))} à ${timeFmt.form
 const RESULTS: Record<string, string> = {
   in_progress: "Le ticket est en cours de traitement.", waiting: "Le ticket est en attente.", new: "Le ticket est de nouveau ouvert.", resolved: "Le ticket est résolu.",
   archived: "Le ticket a été archivé.", priorite: "La priorité a été modifiée.", categorie: "La catégorie a été modifiée.", reassigne: "Le responsable a été modifié.",
-  assigne: "Le ticket vous est assigné.", desassigne: "Le ticket n’est plus assigné.", "fichier-retire": "La pièce jointe a été retirée.", duplique: "Ticket dupliqué : voici la copie.",
+  assigne: "Le ticket vous est assigné.", desassigne: "Le ticket n’est plus assigné.", "fichier-retire": "La pièce jointe a été retirée.", "note-modifiee": "La note interne a été modifiée.", "note-supprimee": "La note interne a été supprimée.", duplique: "Ticket dupliqué : voici la copie.",
 };
 const card = "rounded-2xl border border-line bg-white p-5 shadow-card";
 const row = "grid grid-cols-[8.5rem_minmax(0,1fr)] items-center gap-3 py-1.5 text-sm";
 
-type SP = Promise<{ resultat?: string; erreur?: string; onglet?: string; evenement?: string }>;
+type SP = Promise<{ resultat?: string; erreur?: string; onglet?: string; evenement?: string; fichier?: string }>;
 
 async function Content({ id, searchParams }: { id: string; searchParams: SP }) {
   const sp = await searchParams;
   const [d, staff] = await Promise.all([loadSupportDetail(id), loadSupportStaff()]);
   if (!d) notFound();
-  const tab = sp.onglet === "historique" ? "historique" : "conversation";
+  const tab = ["historique", "pieces-jointes", "notes"].includes(sp.onglet ?? "") ? sp.onglet : "conversation";
   const filter = parseHistoryFilter(sp.evenement);
   const events = tab === "historique" ? filterHistory((await loadSupportHistory(id)).map(describeEvent), filter) : [];
   const t = d.ticket;
@@ -69,16 +71,13 @@ async function Content({ id, searchParams }: { id: string; searchParams: SP }) {
 
         <section className={card}>
           <nav aria-label="Sections du ticket" className="mb-4 flex flex-wrap gap-1 border-b border-line pb-3">
-            {([["conversation", MessageSquare, `Conversation (${conversationCount(d)})`], ["historique", History, "Historique"]] as const).map(([key, Icon, text]) => (
+            {([["conversation", MessageSquare, `Conversation (${conversationCount(d)})`], ["historique", History, "Historique"], ["pieces-jointes", Paperclip, `Pièces jointes (${d.files.length})`], ["notes", FileText, `Notes internes (${notes})`]] as const).map(([key, Icon, text]) => (
               <Link key={key} href={key === "conversation" ? back : `${back}?onglet=${key}`} aria-current={tab === key ? "page" : undefined}
                 className={cn("inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold", tab === key ? "bg-brand text-white" : "text-brand-dark hover:bg-brand-soft")}><Icon className="h-4 w-4" aria-hidden />{text}</Link>
             ))}
-            {([[Paperclip, `Pièces jointes (${d.files.length})`], [FileText, `Notes internes (${notes})`]] as const).map(([Icon, text]) => (
-              <span key={text} aria-disabled="true" title="Bientôt disponible" className="inline-flex cursor-not-allowed items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-brand-dark opacity-50"><Icon className="h-4 w-4" aria-hidden />{text}</span>
-            ))}
           </nav>
 
-          {tab === "historique" ? <SupportHistory events={events} filter={filter} base={back} /> : <>
+          {tab === "historique" ? <SupportHistory events={events} filter={filter} base={back} /> : tab === "notes" ? <SupportNotes ticketId={t.id} notes={messages.filter((m) => m.internal)} archived={archived} base={back} /> : tab === "pieces-jointes" ? <SupportFilesTab ticketId={t.id} files={d.files} selectedId={sp.fichier} archived={archived} base={back} /> : <>
           {messages.length === 0 ? <p className="rounded-lg bg-surface px-4 py-8 text-center text-sm text-muted">Aucun message pour le moment. Répondez à l’utilisateur ci-dessous.</p> : (
             <ol className="space-y-5">
               {messages.map((m) => {
