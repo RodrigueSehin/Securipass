@@ -34,8 +34,8 @@ const row = "grid grid-cols-[8.5rem_minmax(0,1fr)] items-center gap-3 py-1.5 tex
 
 type SP = Promise<{ resultat?: string; erreur?: string; onglet?: string; evenement?: string; fichier?: string }>;
 
-async function Content({ id, searchParams }: { id: string; searchParams: SP }) {
-  const sp = await searchParams;
+async function Content({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: SP }) {
+  const [{ id }, sp] = await Promise.all([params, searchParams]);
   const [d, staff] = await Promise.all([loadSupportDetail(id), loadSupportStaff()]);
   if (!d) notFound();
   const tab = ["historique", "pieces-jointes", "notes"].includes(sp.onglet ?? "") ? sp.onglet : "conversation";
@@ -182,15 +182,14 @@ async function Content({ id, searchParams }: { id: string; searchParams: SP }) {
   );
 }
 
-export default async function SupportTicketPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: SP }) {
-  const { id } = await params;
+export default function SupportTicketPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: SP }) {
   return (
     <div className="space-y-5">
       <AdminPageHeader crumbs={[{ label: "Support", href: "/admin/support" }, { label: "Détail du ticket" }]} icon="document" title="Détail du ticket"
         description="Consultez les échanges, traitez la demande et mettez à jour le statut du ticket."
         actions={<Link href="/admin/support" className="inline-flex items-center gap-2 rounded-lg border border-brand bg-white px-5 py-2.5 text-sm font-semibold text-brand hover:bg-brand-soft"><ArrowLeft className="h-4 w-4" aria-hidden /> Retour à la liste</Link>} />
       <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-white" aria-hidden />}>
-        <Content id={id} searchParams={searchParams} />
+        <Content params={params} searchParams={searchParams} />
       </Suspense>
     </div>
   );
