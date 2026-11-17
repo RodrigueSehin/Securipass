@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CalendarDays, Download, FileText, Image as ImageIcon, Info, Maximize2, MoreHorizontal, Paperclip, Trash2 } from "lucide-react";
+import { CalendarDays, Download, FileText, Image as ImageIcon, Info, Maximize2, Paperclip, Trash2 } from "lucide-react";
+import { RowMenu } from "@/components/admin/row-menu";
 import { AttachFileButton } from "@/components/admin/support-attachments";
 import { Avatar } from "@/components/ui/avatar";
 import { formatFileSize, type SupportFile } from "@/lib/admin/support";
@@ -53,15 +54,12 @@ export function SupportFilesTab({ ticketId, files, selectedId, archived, base }:
                       <td className="px-3 py-3">
                         <div className="flex items-center justify-end gap-2">
                           <a href={`/admin/support/fichiers/${f.id}`} download aria-label={`Télécharger ${f.name}`} className="rounded-lg border border-line p-2 text-brand hover:bg-brand-soft"><Download className="h-4 w-4" aria-hidden /></a>
-                          <details className="relative">
-                            <summary aria-label={`Actions pour ${f.name}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                            <div className="absolute right-0 z-10 mt-1 w-44 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
-                              <form action={removeSupportFile}>
-                                <input type="hidden" name="fileId" value={f.id} /><input type="hidden" name="back" value={base} />
-                                <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-danger hover:bg-brand-soft"><Trash2 className="h-4 w-4" aria-hidden />Retirer</button>
-                              </form>
-                            </div>
-                          </details>
+                          <RowMenu label={`Actions pour ${f.name}`}>
+                            <form action={removeSupportFile}>
+                              <input type="hidden" name="fileId" value={f.id} /><input type="hidden" name="back" value={base} />
+                              <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-danger hover:bg-brand-soft"><Trash2 className="h-4 w-4" aria-hidden />Retirer</button>
+                            </form>
+                          </RowMenu>
                         </div>
                       </td>
                     </tr>
