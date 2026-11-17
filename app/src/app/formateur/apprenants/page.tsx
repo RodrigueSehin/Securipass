@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CheckCircle2, Eye, GraduationCap, LayoutGrid, List, MessageSquare, MoreVertical, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CheckCircle2, Eye, GraduationCap, LayoutGrid, List, MessageSquare, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
 import { LearnerFilters, EXPORT_FORM_ID, PageSize, SelectAll } from "@/components/learners/learner-toolbar";
 import { Avatar } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/button";
@@ -69,14 +70,11 @@ function Actions({ r }: { r: LearnerRow }) {
     <div className="flex items-center gap-2">
       <Link href={`/formateur/apprenants/${r.id}`} aria-label={`Voir la fiche de ${r.name}`} className={btn}><Eye className="h-4 w-4" aria-hidden /></Link>
       <a href={`mailto:${r.email}`} aria-label={`Écrire à ${r.name}`} className={btn}><MessageSquare className="h-4 w-4" aria-hidden /></a>
-      <details className="relative">
-        <summary aria-label={`Plus d’actions pour ${r.name}`} className={cn(btn, "cursor-pointer list-none text-brand-dark [&::-webkit-details-marker]:hidden")}><MoreVertical className="h-4 w-4" aria-hidden /></summary>
-        <div className="absolute right-0 z-10 mt-1 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+      <RowMenu vertical label={`Plus d’actions pour ${r.name}`}>
           <Link href={`/formateur/apprenants/${r.id}`} className={item}>Voir la fiche</Link>
           {r.sessionId && <Link href={`/formateur/formations/${r.courseId}/sessions/${r.sessionId}`} className={item}>Voir la session</Link>}
           <Link href={`/formateur/formations/${r.courseId}`} className={item}>Voir la formation</Link>
-        </div>
-      </details>
+        </RowMenu>
     </div>
   );
 }

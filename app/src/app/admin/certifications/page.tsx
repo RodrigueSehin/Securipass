@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Award, BadgeCheck, ChevronLeft, ChevronRight, CheckCircle2, GraduationCap, MoreHorizontal, Plus, Users, XCircle, Clock } from "lucide-react";
+import { Award, BadgeCheck, ChevronLeft, ChevronRight, CheckCircle2, GraduationCap, Plus, Users, XCircle, Clock } from "lucide-react";
 import { CategoryBadge } from "@/components/admin/category-badge";
 import { CertificationsToolbar } from "@/components/admin/certifications-toolbar";
 import { StatCard } from "@/components/admin/dashboard-widgets";
@@ -103,9 +104,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       <td className="px-3 py-3"><span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold", st.tone)}>
                         {c.status === "active" ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : c.status === "review" ? <Clock className="h-4 w-4" aria-hidden /> : <XCircle className="h-4 w-4" aria-hidden />}{st.label}</span></td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${c.name}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${c.name}`}>
                             <Link href={`/admin/formations/${c.course_id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la formation</Link>
                             {(["active", "review", "inactive"] as const).filter((s) => s !== c.status).map((s) => (
                               <form key={s} action={setCertificationStatus}>
@@ -114,8 +113,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                   {s === "active" ? "Activer" : s === "review" ? "Mettre en révision" : "Désactiver"}</button>
                               </form>
                             ))}
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );

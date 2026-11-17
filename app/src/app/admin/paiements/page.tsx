@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Banknote, Building2, CheckCircle2, ChevronLeft, ChevronRight, Clock, CreditCard, Download, FileText, Landmark, MoreHorizontal, Plus, Smartphone, Wallet, XCircle, type LucideIcon } from "lucide-react";
+import { Banknote, Building2, CheckCircle2, ChevronLeft, ChevronRight, Clock, CreditCard, Download, FileText, Landmark, Plus, Smartphone, Wallet, XCircle, type LucideIcon } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { KindDonut, PaymentsChart } from "@/components/admin/payments-charts";
@@ -122,17 +123,14 @@ async function Content({ searchParams }: { searchParams: SP }) {
                         {p.status === "confirmed" ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : p.status === "pending" ? <Clock className="h-4 w-4" aria-hidden /> : <XCircle className="h-4 w-4" aria-hidden />}{st.label}</span></td>
                       <td className="px-3 py-3">
                         {p.status === "pending" ? (
-                          <details className="relative">
-                            <summary aria-label={`Actions pour ${p.reference}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                            <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                          <RowMenu label={`Actions pour ${p.reference}`}>
                               {([["confirmed", "Confirmer le paiement", "text-success"], ["failed", "Déclarer échoué", "text-danger"], ["cancelled", "Annuler le paiement", "text-brand-dark"]] as const).map(([s, l, tone]) => (
                                 <form key={s} action={setPaymentStatus}>
                                   <input type="hidden" name="paymentId" value={p.id} /><input type="hidden" name="status" value={s} /><input type="hidden" name="back" value={here} />
                                   <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", tone)}>{l}</button>
                                 </form>
                               ))}
-                            </div>
-                          </details>
+                            </RowMenu>
                         ) : <span className="text-muted" title="Statut définitif">—</span>}
                       </td>
                     </tr>

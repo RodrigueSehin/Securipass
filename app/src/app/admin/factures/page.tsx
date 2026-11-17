@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowRight, Building2, CheckCircle2, ChevronLeft, ChevronRight, Download, Eye, FileText, Hourglass, MoreHorizontal, Plus, Printer, Undo2, XCircle, type LucideIcon } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, ChevronLeft, ChevronRight, Download, Eye, FileText, Hourglass, Plus, Printer, Undo2, XCircle, type LucideIcon } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { BillingToolbar, PrintButton } from "@/components/admin/billing-toolbar";
 import { StatCard } from "@/components/admin/dashboard-widgets";
@@ -121,9 +122,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                               <Link href={`/admin/factures/${r.id}`} aria-label={`Voir la facture ${r.number}`} className="rounded-lg p-2 text-brand-dark hover:bg-brand-soft"><Eye className="h-4 w-4" aria-hidden /></Link>
                               <Link href={`/admin/factures/${r.id}`} aria-label={`Télécharger ou imprimer la facture ${r.number}`} className="rounded-lg p-2 text-brand-dark hover:bg-brand-soft"><Download className="h-4 w-4" aria-hidden /></Link>
                               {r.status !== "cancelled" && (
-                                <details className="relative">
-                                  <summary aria-label={`Actions pour ${r.number}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                                  <div className="absolute right-0 z-10 mt-1 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                                <RowMenu label={`Actions pour ${r.number}`}>
                                     {(r.status === "pending" || r.status === "draft") && (r.status === "draft" ? (["pending", "cancelled"] as const) : (["paid", "cancelled"] as const)).map((s) => (
                                       <form key={s} action={setInvoiceStatus}>
                                         <input type="hidden" name="invoiceId" value={r.id} /><input type="hidden" name="status" value={s} /><input type="hidden" name="back" value={here} />
@@ -131,8 +130,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                       </form>
                                     ))}
                                     {r.status === "paid" && <Link href={`/admin/factures/remboursement/nouveau?facture=${r.id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Rembourser ou émettre un avoir</Link>}
-                                  </div>
-                                </details>
+                                  </RowMenu>
                               )}
                             </div>
                           </td>
@@ -162,17 +160,14 @@ async function Content({ searchParams }: { searchParams: SP }) {
                           <td className="whitespace-nowrap px-3 py-3 text-xs text-brand-dark">{dateTime(r.requested_at)}</td>
                           <td className="px-3 py-3">
                             {r.status === "in_progress" ? (
-                              <details className="relative">
-                                <summary aria-label={`Actions pour ${r.number}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                                <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                              <RowMenu label={`Actions pour ${r.number}`}>
                                   {(["refunded", "rejected"] as const).map((s) => (
                                     <form key={s} action={setRefundStatus}>
                                       <input type="hidden" name="refundId" value={r.id} /><input type="hidden" name="status" value={s} /><input type="hidden" name="back" value={here} />
                                       <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", s === "refunded" ? "text-success" : "text-danger")}>{s === "refunded" ? "Marquer comme remboursé" : "Refuser"}</button>
                                     </form>
                                   ))}
-                                </div>
-                              </details>
+                                </RowMenu>
                             ) : <span className="text-muted" title="Traité">—</span>}
                           </td>
                         </tr>

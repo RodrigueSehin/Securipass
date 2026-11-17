@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, ArrowUpDown, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Download, Hourglass, MoreHorizontal, Plus, Star, Users } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Download, Hourglass, Plus, Star, Users } from "lucide-react";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { TrainersFilters } from "@/components/admin/trainers-toolbar";
 import { UsersPageSize, UsersSelectAll } from "@/components/admin/users-toolbar";
@@ -147,9 +148,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       <td className="px-3 py-3"><span className={cn("rounded-md px-3 py-1 text-xs font-semibold", ct.tone)}>{ct.label}</span></td>
                       <td className="whitespace-nowrap px-3 py-3 text-xs text-brand-dark">{date(t.added_at)}</td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${name}`} className="flex h-9 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${name}`}>
                             <Link href={`/admin/utilisateurs/${t.id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir le compte</Link>
                             <form action={setTrainerContract}>
                               <input type="hidden" name="userId" value={t.id} />
@@ -165,8 +164,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                 <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", t.status === "suspended" ? "text-success" : "text-danger")}>{t.status === "suspended" ? "Réactiver le compte" : "Suspendre le compte"}</button>
                               </form>
                             )}
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );

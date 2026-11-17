@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Archive, ChevronLeft, ChevronRight, FolderOpen, GraduationCap, MoreHorizontal, Plus, Users } from "lucide-react";
+import { Archive, ChevronLeft, ChevronRight, FolderOpen, GraduationCap, Plus, Users } from "lucide-react";
 import { CategoryBadge } from "@/components/admin/category-badge";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { CategoriesFilters } from "@/components/admin/categories-toolbar";
@@ -110,9 +111,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       <td className="px-3 py-3"><span className={cn("rounded-md px-3 py-1 text-xs font-semibold", st.tone)}>{st.label}</span></td>
                       <td className="whitespace-nowrap px-3 py-3 text-xs text-brand-dark">{date(c.created_at)}</td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${c.name}`} className="flex h-9 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${c.name}`}>
                             {(ACTIONS[c.status] ?? ACTIONS.active).map(([next, text, tone]) => (
                               <form key={next} action={setCategoryStatus}>
                                 <input type="hidden" name="categoryId" value={c.id} />
@@ -121,8 +120,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                 <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", tone)}>{text}</button>
                               </form>
                             ))}
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );

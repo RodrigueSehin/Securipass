@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Clock, Eye, MoreVertical, Pencil, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Clock, Eye, Pencil, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
 import { AssessmentForm, PageSizeSelect, RosterFilters, SessionPicker } from "@/components/instructor/assessment-controls";
 import { Avatar } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/button";
@@ -254,14 +255,11 @@ async function Content({ searchParams }: { searchParams: SP }) {
                           <div className="flex items-center gap-2">
                             <Link href={href({ apprenant: r.learnerId, onglet: "historique" })} aria-label={`Voir l’historique de ${r.name}`} className={btn}><Eye className="h-4 w-4" aria-hidden /></Link>
                             <Link href={href({ apprenant: r.learnerId })} aria-label={`Évaluer ${r.name}`} className={btn}><Pencil className="h-4 w-4" aria-hidden /></Link>
-                            <details className="relative">
-                              <summary aria-label={`Plus d’actions pour ${r.name}`} className={cn(btn, "cursor-pointer list-none text-brand-dark [&::-webkit-details-marker]:hidden")}><MoreVertical className="h-4 w-4" aria-hidden /></summary>
-                              <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                            <RowMenu vertical label={`Plus d’actions pour ${r.name}`}>
                                 <Link href={`/formateur/apprenants/${r.learnerId}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la fiche</Link>
                                 <Link href={`/formateur/formations/${session.courseId}/sessions/${session.id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la session</Link>
                                 <a href={`mailto:${r.email}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Écrire à l’apprenant</a>
-                              </div>
-                            </details>
+                              </RowMenu>
                           </div>
                         </td>
                       </tr>

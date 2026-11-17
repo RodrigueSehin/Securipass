@@ -1,7 +1,8 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Archive, BarChart3, BookOpen, Check, ChevronLeft, ChevronRight, Copy, EllipsisVertical, FileText, Pencil, Search, Users } from "lucide-react";
+import { Archive, BarChart3, BookOpen, Check, ChevronLeft, ChevronRight, Copy, FileText, Pencil, Search, Users } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Alert, EmptyState, PageHeader, StatusBadge } from "@/components/ui/feedback";
 import { KpiTile } from "@/components/instructor/dashboard-panels";
@@ -190,11 +191,7 @@ function CourseRow({ course: r, selected, href }: { course: CourseListRow; selec
             <BarChart3 className="h-4 w-4" aria-hidden />
             <span className="sr-only">Statistiques, bientôt disponibles</span>
           </span>
-          <details className="relative">
-            <summary aria-label={`Autres actions pour ${r.title}`} className="flex cursor-pointer list-none rounded-lg p-2 text-muted hover:bg-surface">
-              <EllipsisVertical className="h-4 w-4" aria-hidden />
-            </summary>
-            <div className="absolute right-0 z-10 mt-1 w-44 rounded-xl border border-line bg-white py-1 shadow-card">
+          <RowMenu vertical label={`Autres actions pour ${r.title}`}>
               <form action={duplicateCourse}>
                 <input type="hidden" name="courseId" value={r.id} />
                 <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-brand-dark hover:bg-surface">
@@ -209,8 +206,7 @@ function CourseRow({ course: r, selected, href }: { course: CourseListRow; selec
                   </button>
                 </form>
               )}
-            </div>
-          </details>
+            </RowMenu>
         </div>
       </td>
     </tr>

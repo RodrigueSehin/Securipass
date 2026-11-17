@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Clock, Eye, LayoutGrid, List, MoreVertical, Pencil, Play, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Clock, Eye, LayoutGrid, List, Pencil, Play, Plus, Users, XCircle, type LucideIcon } from "lucide-react";
 import { PageSizeSelect, SessionFilters } from "@/components/sessions/session-filters";
 import { SessionCalendar, SessionDistribution, SessionThumb, UpcomingSessions } from "@/components/sessions/session-panels";
 import { ButtonLink } from "@/components/ui/button";
@@ -59,16 +60,11 @@ function Actions({ s }: { s: MySession }) {
     <div className="flex items-center gap-2">
       <Link href={base} aria-label={`Voir ${s.title}`} className={btn}><Eye className="h-4 w-4" aria-hidden /></Link>
       <Link href={base} aria-label={`Modifier ${s.title}`} className={btn}><Pencil className="h-4 w-4" aria-hidden /></Link>
-      <details className="relative">
-        <summary aria-label={`Plus d’actions pour ${s.title}`} className={cn(btn, "cursor-pointer list-none text-brand-dark [&::-webkit-details-marker]:hidden")}>
-          <MoreVertical className="h-4 w-4" aria-hidden />
-        </summary>
-        <div className="absolute right-0 z-10 mt-1 w-60 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+      <RowMenu vertical label={`Plus d’actions pour ${s.title}`}>
           <Link href={base} className={item}>Participants et gestion</Link>
           <Link href={`/formateur/formations/${s.course_id}/sessions`} className={item}>Toutes les sessions de la formation</Link>
           <Link href={`/formateur/formations/${s.course_id}`} className={item}>Voir la formation</Link>
-        </div>
-      </details>
+        </RowMenu>
     </div>
   );
 }

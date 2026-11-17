@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Check, ChevronLeft, ChevronRight, Clock, CalendarCheck, Coins, Hourglass, MoreHorizontal, Percent, Plus, Settings, Wallet, BarChart3 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Clock, CalendarCheck, Coins, Hourglass, Percent, Plus, Settings, Wallet, BarChart3 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { CommissionsChart } from "@/components/admin/commissions-chart";
 import { CommissionsFilters } from "@/components/admin/commissions-toolbar";
@@ -161,9 +162,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                               </span>
                             </td>
                             <td className="px-3 py-3">
-                              <details className="relative">
-                                <summary aria-label={`Actions pour ${r.course_title}`} className="flex h-9 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                                <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                              <RowMenu label={`Actions pour ${r.course_title}`}>
                                   <Link href={`/admin/formations/${r.course_id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la formation</Link>
                                   {r.pending_amount > 0 && (
                                     <form action={payCommissions}>
@@ -174,8 +173,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                       <button className="block w-full px-3 py-2 text-left font-semibold text-success hover:bg-brand-soft">Verser {formatFcfa(r.pending_amount)}</button>
                                     </form>
                                   )}
-                                </div>
-                              </details>
+                                </RowMenu>
                             </td>
                           </tr>
                         );

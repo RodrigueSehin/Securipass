@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, Eye, Layers, RotateCcw, ShieldCheck, Trash, FileText, EllipsisVertical } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Eye, Layers, RotateCcw, ShieldCheck, Trash, FileText } from "lucide-react";
 import { cancelEnrollment } from "@/lib/enrollments/actions";
 import { LIST_STATUS_LABEL, type ListStatus } from "@/lib/learner/formations";
 import { Panel } from "./dashboard-parts";
@@ -100,11 +101,7 @@ export function FormationItem({ row }: { row: FormationRow }) {
               <p className="text-sm font-bold text-brand-dark">{row.dateValue}</p>
             </div>
           ) : <span />}
-          <details className="relative">
-            <summary aria-label={`Autres actions pour ${row.title}`} className="flex cursor-pointer list-none rounded-lg p-1.5 text-muted hover:bg-surface [&::-webkit-details-marker]:hidden">
-              <EllipsisVertical className="h-5 w-5" aria-hidden />
-            </summary>
-            <div className="absolute right-0 z-10 mt-1 w-52 rounded-xl border border-line bg-white py-1 shadow-card">
+          <RowMenu vertical label={`Autres actions pour ${row.title}`}>
               <Link href={row.openHref} className="flex items-center gap-2 px-3 py-2 text-sm text-brand-dark hover:bg-surface"><BookOpen className="h-4 w-4" aria-hidden /> Ouvrir la formation</Link>
               {row.cancellable && (
                 <form action={cancelEnrollment}>
@@ -113,8 +110,7 @@ export function FormationItem({ row }: { row: FormationRow }) {
                   <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-surface"><Trash className="h-4 w-4" aria-hidden /> Annuler mon inscription</button>
                 </form>
               )}
-            </div>
-          </details>
+            </RowMenu>
         </div>
         <Action row={row} />
       </div>

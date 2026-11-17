@@ -1,7 +1,8 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Eye, FileText, FolderOpen, MoreHorizontal, Newspaper, PenLine, Plus } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Eye, FileText, FolderOpen, Newspaper, PenLine, Plus } from "lucide-react";
 import { BlogToolbar } from "@/components/admin/blog-toolbar";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { UsersPageSize } from "@/components/admin/users-toolbar";
@@ -112,9 +113,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                         <td className="px-3 py-3">
                           <div className="flex items-center gap-1">
                             {p.status === "published" && <Link href={`/blog/${p.slug}`} target="_blank" aria-label={`Voir « ${p.title} » sur le site`} className="rounded-lg p-2 text-brand hover:bg-brand-soft"><Eye className="h-4 w-4" aria-hidden /></Link>}
-                            <details className="relative">
-                              <summary aria-label={`Actions pour ${p.title}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                              <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                            <RowMenu label={`Actions pour ${p.title}`}>
                                 {([p.status !== "published" ? ["published", "Publier", "text-success"] : null, p.status === "published" ? ["draft", "Repasser en brouillon", "text-brand-dark"] : null,
                                   p.status !== "archived" ? ["archived", "Archiver", "text-danger"] : null] as const).map((a) => a && (
                                   <form key={a[0]} action={setBlogStatus}>
@@ -122,8 +121,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                     <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", a[2])}>{a[1]}</button>
                                   </form>
                                 ))}
-                              </div>
-                            </details>
+                              </RowMenu>
                           </div>
                         </td>
                       </tr>

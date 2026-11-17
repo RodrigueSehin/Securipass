@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { CheckCircle2, ChevronLeft, ChevronRight, Clock, Download, CalendarDays, MoreHorizontal, Plus, Users, XCircle, ArrowDown, ArrowUp } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Clock, Download, CalendarDays, Plus, Users, XCircle, ArrowDown, ArrowUp } from "lucide-react";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { EnrollmentsFilters } from "@/components/admin/enrollments-toolbar";
 import { UsersPageSize, UsersSelectAll } from "@/components/admin/users-toolbar";
@@ -133,9 +134,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       <td className="px-3 py-3"><span title={RAW_STATUS_LABEL[e.status]} className={cn("whitespace-nowrap rounded-md px-3 py-1 text-xs font-semibold", st.tone)}>{st.label}</span></td>
                       <td className="px-3 py-3">{e.payment_status ? <span className={cn("whitespace-nowrap rounded-md px-3 py-1 text-xs font-semibold", PAYMENT_STATUS_UI[e.payment_status].tone)}>{PAYMENT_STATUS_UI[e.payment_status].label}</span> : <span className="text-xs text-muted">—</span>}</td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${e.learner_name}`} className="flex h-9 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-52 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${e.learner_name}`}>
                             <Link href={`/admin/formations/${e.course_id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la formation</Link>
                             {e.status === "pending_approval" && (["approve", "decline"] as const).map((d) => (
                               <form key={d} action={decideEnrollment}>
@@ -149,8 +148,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                 <button className="block w-full px-3 py-2 text-left text-danger hover:bg-brand-soft">Annuler l’inscription</button>
                               </form>
                             )}
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );

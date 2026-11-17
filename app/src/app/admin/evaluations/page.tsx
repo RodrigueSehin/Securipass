@@ -1,6 +1,7 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, CheckCircle2, ChevronLeft, ChevronRight, ClipboardCheck, ClipboardList, Clock, Download, MoreHorizontal, ShieldCheck, Trophy, Users, XCircle, CalendarDays, Plus, type LucideIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, CheckCircle2, ChevronLeft, ChevronRight, ClipboardCheck, ClipboardList, Clock, Download, ShieldCheck, Trophy, Users, XCircle, CalendarDays, Plus, type LucideIcon } from "lucide-react";
 import { StatCard } from "@/components/admin/dashboard-widgets";
 import { EvaluationsFilters } from "@/components/admin/evaluations-toolbar";
 import { UsersPageSize, UsersSelectAll } from "@/components/admin/users-toolbar";
@@ -143,9 +144,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       </td>
                       <td className="px-3 py-3"><span className={cn("whitespace-nowrap rounded-md px-3 py-1 text-xs font-semibold", st.tone)}>{st.label}</span></td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${e.title}`} className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${e.title}`}>
                             <Link href={`/admin/formations/${e.course_id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Voir la formation</Link>
                             {([
                               e.raw_status === "draft" ? ["published", "Publier l’évaluation", "text-success"] : null,
@@ -157,8 +156,7 @@ async function Content({ searchParams }: { searchParams: SP }) {
                                 <button className={cn("block w-full px-3 py-2 text-left hover:bg-brand-soft", a[2])}>{a[1]}</button>
                               </form>
                             ))}
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );

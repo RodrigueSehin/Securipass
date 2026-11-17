@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * il passe au-dessus du tableau au lieu d'être rogné par son défilement horizontal.
  * Il s'ouvre vers le haut quand il n'y a pas assez de place en dessous, et se ferme au clic extérieur, à Échap ou au défilement.
  */
-export function RowMenu({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
+export function RowMenu({ label, children, className, vertical }: { label: string; children: React.ReactNode; className?: string; vertical?: boolean }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ top?: number; bottom?: number; right: number } | null>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -45,7 +45,7 @@ export function RowMenu({ label, children, className }: { label: string; childre
   return (
     <div className="inline-block">
       <button ref={button} type="button" aria-label={label} aria-haspopup="menu" aria-expanded={open} onClick={toggle}
-        className={cn("flex h-9 w-10 items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft", className)}><MoreHorizontal className="h-4 w-4" aria-hidden /></button>
+        className={cn("flex h-9 w-10 items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft", className)}>{vertical ? <MoreVertical className="h-4 w-4" aria-hidden /> : <MoreHorizontal className="h-4 w-4" aria-hidden />}</button>
       {open && pos && (
         <div ref={panel} role="menu" style={{ position: "fixed", top: pos.top, bottom: pos.bottom, right: pos.right }}
           className="z-50 w-56 rounded-lg border border-line bg-white py-1 text-sm shadow-card">{children}</div>

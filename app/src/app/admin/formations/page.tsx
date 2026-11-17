@@ -1,7 +1,8 @@
+import { RowMenu } from "@/components/admin/row-menu";
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowDown, ArrowUp, ArrowUpDown, Archive, Award, BookOpen, ChevronLeft, ChevronRight, Clock, Download, MoreHorizontal, PlayCircle, Plus, Star, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Archive, Award, BookOpen, ChevronLeft, ChevronRight, Clock, Download, PlayCircle, Plus, Star, Upload } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { CategoryBadge } from "@/components/admin/category-badge";
 import { CoursesFilters } from "@/components/admin/courses-toolbar";
@@ -172,12 +173,9 @@ async function Content({ searchParams }: { searchParams: SP }) {
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-xs text-brand-dark">{date(c.created_at)}</td>
                       <td className="px-3 py-3">
-                        <details className="relative">
-                          <summary aria-label={`Actions pour ${c.title}`} className="flex h-9 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-brand-dark hover:bg-brand-soft [&::-webkit-details-marker]:hidden"><MoreHorizontal className="h-4 w-4" aria-hidden /></summary>
-                          <div className="absolute right-0 z-10 mt-1 w-48 rounded-lg border border-line bg-white py-1 text-sm shadow-card">
+                        <RowMenu label={`Actions pour ${c.title}`}>
                             <Link href={`/admin/formations/${c.id}`} className="block px-3 py-2 text-brand-dark hover:bg-brand-soft">Ouvrir la fiche</Link>
-                          </div>
-                        </details>
+                          </RowMenu>
                       </td>
                     </tr>
                   );
