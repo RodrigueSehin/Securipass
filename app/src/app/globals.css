@@ -84,6 +84,16 @@ body {
 @keyframes hero-progress { from { width: 0; } to { width: 100%; } }
 .hero-progress { animation-name: hero-progress; animation-timing-function: linear; animation-fill-mode: both; }
 
+/* Bande d'information de l'accueil : défilement continu, vitesse proportionnelle au contenu, pause au survol et au focus */
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee-scroll 40s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none !important; flex-wrap: wrap; width: auto; }
+  .marquee-group[aria-hidden="true"] { display: none; }
+  .marquee-viewport { overflow: visible; }
+}
+
 /* Impression (relevé, facture) : sans menu ni barre du haut */
 @media print {
   aside, header.sticky { display: none !important; }

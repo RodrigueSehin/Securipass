@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { AnnouncementBar } from "@/components/home/announcement-bar";
 import { Hero } from "@/components/home/hero";
 import { CategoryCards } from "@/components/home/category-cards";
 import { StatsBand } from "@/components/home/stats-band";
@@ -23,6 +24,9 @@ async function StatsDependent() {
 export default function HomePage() {
   return (
     <>
+      <Suspense fallback={null}>
+        <AnnouncementBar />
+      </Suspense>
       <Suspense fallback={<><Hero learners={0} /><CategoryCards /></>}>
         <StatsDependent />
       </Suspense>
