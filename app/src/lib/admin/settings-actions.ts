@@ -18,7 +18,16 @@ function done(back: string, key: "resultat" | "erreur", value: string): never {
 async function save(back: string, values: Record<string, string>): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.rpc("admin_update_platform_settings", { p_values: values });
-  if (error) done(back, "erreur", "L’enregistrement a échoué. Réessayez.");
+  if (error) {
+    console.error("[settings] admin_update_platform_settings :", error.code, error.message);
+    const m = error.message;
+    if (m.includes("field_unknown")) done(back, "erreur", "La base n’est pas à jour : appliquez la migration 20260101000064 (paramètres généraux).");
+    if (error.code === "PGRST202" || m.includes("Could not find the function")) done(back, "erreur", "La base n’est pas à jour : appliquez les migrations 20260101000063 et 20260101000064.");
+    if (m.includes("platform_settings") && m.includes("does not exist")) done(back, "erreur", "La table des paramètres n’existe pas : appliquez la migration 20260101000063.");
+    if (m.includes("check constraint")) done(back, "erreur", "Une valeur est refusée par la base (longueur, format de l’adresse web ou de la couleur). Vérifiez les champs.");
+    if (m.includes("forbidden") || m.includes("permission denied")) done(back, "erreur", "Seul un administrateur peut modifier les paramètres.");
+    done(back, "erreur", `L’enregistrement a échoué (${m.slice(0, 120)}).`);
+  }
   done(back, "resultat", "enregistre");
 }
 
